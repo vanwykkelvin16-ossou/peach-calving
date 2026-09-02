@@ -269,8 +269,6 @@ h2 .ac{font-size:1.06em}
 .hero-card hr{border:0;height:1px;background:var(--line);margin:var(--s-5) 0}
 .hero-card h4{margin-bottom:6px}
 
-/* inner heroes are shorter, so the control sits clear of the copy */
-.banner 
 /* ─────────────────── INNER PAGE HERO ───────────────────
    Same full-bleed media treatment as the home hero, at a shorter
    measure. The scrim hue keeps the routing signal: green for
@@ -342,24 +340,28 @@ section{padding:var(--s-9) 0}
   color:var(--gold);line-height:1;display:block}
 .statc .fig.sm{font-size:clamp(1.5rem,2.2vw,1.9rem);letter-spacing:-.035em}
 
-/* ── audience: media panel with an overlapping info card ── */
+/* ── audience: photograph on top, content beneath, so the picture is
+      fully visible rather than cropped behind an overlapping card ── */
 .audience{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-6);margin-top:var(--s-7)}
-.aud{position:relative;border-radius:var(--r-xl);overflow:hidden;min-height:470px;display:flex;
-  align-items:flex-end;padding:var(--s-5);
-  background:linear-gradient(150deg,var(--green-600),var(--green-900))}
-.aud:nth-child(2){background:linear-gradient(150deg,var(--blue-500),var(--blue-950))}
-.aud picture,.aud img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-/* a wash in the routing colour ties each photograph to its audience */
-.aud::before{content:"";position:absolute;inset:0;z-index:1;
-  background:linear-gradient(to top, rgba(10,33,23,.55) 0%, rgba(10,33,23,.10) 55%, transparent 100%)}
-.aud:nth-child(2)::before{
-  background:linear-gradient(to top, rgba(0,7,31,.58) 0%, rgba(0,11,74,.12) 55%, transparent 100%)}
-.aud > .aud-card{margin-top:auto}
-.aud-card{position:relative;z-index:2;background:#fff;border-radius:var(--r-lg);padding:var(--s-6);
-  box-shadow:var(--sh-2)}
+.aud{position:relative;display:flex;flex-direction:column;background:#fff;
+  border:1px solid var(--line);border-radius:var(--r-xl);overflow:hidden;
+  transition:transform var(--t-mid) var(--e-out),box-shadow var(--t-mid) var(--e-out),
+             border-color var(--t-mid) var(--e-out)}
+.aud:hover{transform:translateY(-4px);box-shadow:var(--sh-2);border-color:var(--line-2)}
+.aud picture{display:block;aspect-ratio:16/10;overflow:hidden}
+.aud picture img{width:100%;height:100%;object-fit:cover;
+  transition:transform 700ms var(--e-out)}
+.aud:hover picture img{transform:scale(1.04)}
+/* a hairline in the routing colour keeps each card owner- or investor-facing */
+.aud::after{content:"";position:absolute;top:0;left:0;right:0;height:4px;z-index:2;
+  background:var(--green-700)}
+.aud:nth-child(2)::after{background:var(--blue-700)}
+.aud-card{padding:var(--s-6);display:flex;flex-direction:column;flex:1}
 .aud-card h3{margin-bottom:var(--s-3)}
 .aud-card p{color:var(--ink-70);font-size:.96rem}
-.aud-card .arrowlink{margin-top:var(--s-4)}
+.aud-card .arrowlink{margin-top:auto;padding-top:var(--s-5);align-self:flex-start}
+.aud:nth-child(2) .aud-card .arrowlink{color:var(--blue-700)}
+.aud:nth-child(2) .aud-card .arrowlink:hover{color:var(--blue-950)}
 
 /* ── numbered steps ── */
 .steps{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;margin-top:var(--s-7);
@@ -413,6 +415,26 @@ section{padding:var(--s-9) 0}
 .shot--tall{aspect-ratio:4/5}
 .shot--wide{aspect-ratio:16/10}
 .shot--square{aspect-ratio:1/1}
+
+/* a centred block keeps its measure while staying optically centred */
+.center-block{max-width:70ch;margin-inline:auto;text-align:center}
+
+/* ── criteria panel: copy and a filled panel beside a tall photograph ── */
+.panelrow{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-8);align-items:start;
+  margin-top:var(--s-7)}
+.panel{background:var(--green-700);color:#fff;border-radius:var(--r-xl);
+  padding:var(--s-7);margin-top:var(--s-6)}
+.panel h3{color:#fff;margin-bottom:var(--s-3)}
+.panel > p{color:rgba(255,255,255,.86);margin:0 0 var(--s-6);max-width:46ch}
+.panel .btn{margin-top:var(--s-6)}
+.plist{margin:0;padding:0}
+.plist > div{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s-4);
+  padding:var(--s-4) 0;border-top:1px solid rgba(255,255,255,.22)}
+.plist > div:last-child{border-bottom:1px solid rgba(255,255,255,.22)}
+.plist dt{font-weight:500;color:rgba(255,255,255,.86);font-size:.98rem}
+.plist dd{margin:0;font-weight:700;letter-spacing:-.02em;font-size:1.06rem;
+  white-space:nowrap;color:#fff}
+.panelrow .shot{aspect-ratio:4/5;position:sticky;top:calc(var(--nav-h) + var(--s-5))}
 
 /* ── capability strip: icon beside the title, description under it ── */
 .strip{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-6) var(--s-5);
@@ -544,31 +566,34 @@ form{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-
 .errsum a{color:var(--red-deep);font-weight:600}
 
 /* ─────────────────────────── CTA + FOOTER ─────────────────────────── */
-/* ── closing CTA: solid brand panel, copy left, photograph right with a
-      figure card lifted over its lower corner ── */
+/* ── closing CTA: brand panel, copy left with the heading held to the top
+      and the supporting line and action at the foot, photograph right
+      with a figure card lifted over its lower corner ── */
 .cta-band{position:relative;overflow:hidden;background:var(--green-700);color:#fff;
   border-radius:var(--r-xl);margin:var(--s-9) 0;
-  display:grid;grid-template-columns:1fr 1fr;gap:var(--s-7);align-items:center;
+  display:grid;grid-template-columns:1fr 1fr;gap:var(--s-7);align-items:stretch;
   padding:var(--s-8)}
 .cta-band::before{content:"";position:absolute;inset:0;
   background:radial-gradient(70% 120% at 10% 0%, rgba(255,255,255,.10) 0%, transparent 60%)}
 .cta-band--blue{background:var(--blue-700)}
 .cta-band--red{background:var(--red-deep)}
 .cta-band > *{position:relative;z-index:2}
-.cta-band h2{color:#fff;max-width:16ch}
+.cta-band h2{color:#fff;max-width:17ch}
+.cta-copy{display:flex;flex-direction:column;justify-content:space-between;
+  min-height:min(46vh,380px)}
 .cta-copy .eyebrow{color:#fff;margin-bottom:var(--s-5)}
 .cta-copy .eyebrow::before{background:rgba(255,255,255,.85)}
-.cta-copy p{color:rgba(255,255,255,.88);margin-top:var(--s-6);max-width:42ch}
-.cta-copy .btn{margin-top:var(--s-6)}
+.cta-foot{margin-top:var(--s-8)}
+.cta-foot p{color:rgba(255,255,255,.88);margin:0 0 var(--s-6);max-width:40ch}
 .cta-media{position:relative}
-.cta-media .shot{aspect-ratio:16/11;border-radius:var(--r-lg)}
-/* the figure card overlaps the photograph's lower corner */
-.cta-card{position:absolute;right:var(--s-5);bottom:calc(-1 * var(--s-5));z-index:3;
-  background:#fff;color:var(--ink);border-radius:var(--r-lg);padding:var(--s-5);
+.cta-media .shot{height:100%;min-height:340px;border-radius:var(--r-lg)}
+/* the figure card sits inside the photograph's lower corner */
+.cta-card{position:absolute;right:var(--s-5);bottom:var(--s-5);z-index:3;
+  background:#fff;color:var(--ink);border-radius:var(--r-lg);padding:var(--s-4);
   box-shadow:var(--sh-float);display:grid;grid-template-columns:auto 1fr;gap:var(--s-4);
-  align-items:center;max-width:340px}
-.cta-card .shot{width:96px;aspect-ratio:1/1;border-radius:var(--r-md);flex:none}
-.cta-card .fig{font-size:1.5rem;font-weight:700;letter-spacing:-.04em;color:var(--green-700);
+  align-items:center;max-width:330px}
+.cta-card .shot{width:104px;aspect-ratio:1/1;border-radius:var(--r-md);flex:none;min-height:0}
+.cta-card .fig{font-size:1.6rem;font-weight:700;letter-spacing:-.04em;color:var(--green-700);
   line-height:1;display:block;margin-bottom:6px}
 .cta-band--blue .cta-card .fig{color:var(--blue-700)}
 .cta-band--red .cta-card .fig{color:var(--red-deep)}
@@ -593,9 +618,6 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 .f-flag i:nth-child(3){background:var(--flag-green)}
 .f-flag i:nth-child(4){background:var(--flag-blue)}
 
-.flag{border-left:3px solid var(--gold);background:rgba(255,182,18,.09);padding:14px 18px;
-  border-radius:0 var(--r-md) var(--r-md) 0;font-size:.89rem;color:var(--ink-70);margin-top:var(--s-5)}
-.sec-dark .flag{background:rgba(255,182,18,.15);color:rgba(255,255,255,.84)}
 
 .page{display:none}
 .page.active{display:block}
@@ -625,10 +647,15 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   .split,.split-wide,.contact-grid{grid-template-columns:1fr;gap:var(--s-7)}
   .grid-3,.grid-2,.crit-grid,.audience,.team,.steps,.trust{grid-template-columns:1fr}
   .strip{grid-template-columns:1fr 1fr;gap:var(--s-6) var(--s-5)}
-  .feature{grid-template-columns:1fr;gap:var(--s-6)}
+  .feature,.panelrow{grid-template-columns:1fr;gap:var(--s-6)}
+  .panelrow .shot{position:static;aspect-ratio:16/10}
+  .panel{padding:var(--s-6)}
   .feature .shot{aspect-ratio:16/10}
   .cta-band{grid-template-columns:1fr;padding:var(--s-7) var(--s-6) var(--s-8)}
+  .cta-copy{min-height:0}
+  .cta-foot{margin-top:var(--s-6)}
   .cta-media{margin-top:var(--s-4)}
+  .cta-media .shot{min-height:260px}
   .cta-card{position:static;max-width:none;margin-top:var(--s-4);box-shadow:var(--sh-2)}
   .statrow,.statrow.four{grid-template-columns:1fr 1fr}
   .statc{border-right:0;border-bottom:1px solid var(--line-light);padding-right:var(--s-4)}
@@ -767,7 +794,7 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         </div>
       </div>
 
-      <div class="sec-head" style="margin-top:var(--s-8)">
+      <div class="sec-head center" style="margin-top:var(--s-8)">
         <span class="eyebrow">Our Approach</span>
         <h2 class="reveal">Backing the businesses that hold South Africa <em class="ac">together</em></h2>
         <p class="lede reveal rd1">Our mission is to empower South African SMEs to reach their full potential through strategic investment, expert guidance and unwavering support.</p>
@@ -797,7 +824,7 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         </div>
       </div>
 
-      <div class="stack" style="margin-top:var(--s-8);max-width:66ch">
+      <div class="stack center-block" style="margin-top:var(--s-6)">
         <p class="reveal">We exist to level the playing field, giving ambitious businesses the tools and confidence to grow, compete and lead. We focus on building enterprise value, not just boosting short-term profits, because real value sits in strong foundations, scalable operations and predictable performance.</p>
         <p class="reveal"><a class="arrowlink" href="#/our-approach" data-link>Learn about our approach
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -827,8 +854,6 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
             <span class="tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="#2E7D5B" stroke-width="2"/><path d="M12 7.5v9M9.6 9.6h4.2a2.1 2.1 0 0 1 0 4.2h-3.6a2.1 2.1 0 0 0 0 4.2h4.2" stroke="#FFB612" stroke-width="1.8" stroke-linecap="round"/></svg></span>
             <div><h4 class="tnum">£19M</h4><p>UK group profit</p></div>
           </div>
-
-          <div class="flag">Placeholder to confirm: UK figures are shown as group results and must be verifiable and correctly dated before launch. South African numbers to be added as the portfolio builds.</div>
         </div>
       </div>
     </div>
@@ -872,6 +897,41 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 
   <section class="sec-paper">
     <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Acquisition Process</span>
+        <h2 class="reveal">How we assess a <em class="ac">business</em></h2>
+      </div>
+
+      <div class="panelrow">
+        <div class="reveal rd1">
+          <div class="panel">
+            <h3>What we look for</h3>
+            <p>We take a collaborative, respectful approach from day one, so owners feel informed and supported throughout.</p>
+            <dl class="plist">
+              <div><dt>Equity per transaction</dt><dd class="tnum">R5m – R50m</dd></div>
+              <div><dt>Annual turnover, typically</dt><dd class="tnum">R10m+</dd></div>
+              <div><dt>Of profitable trading history</dt><dd class="tnum">3+ years</dd></div>
+              <div><dt>Control or full acquisition preferred</dt><dd>Majority</dd></div>
+              <div><dt>All nine provinces considered</dt><dd>National</dd></div>
+              <div><dt>A capable team that wants to stay</dt><dd>Management</dd></div>
+            </dl>
+            <a class="btn btn-white" href="#/acquisition-process" data-link>See our acquisition process
+              <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="shot reveal rd2">
+          <picture>
+            <source type="image/webp" srcset="assets/img/owner-desk-960.webp 960w, assets/img/owner-desk-1920.webp 1920w" sizes="(max-width:980px) 100vw, 50vw">
+            <img src="assets/img/owner-desk-1920.jpg" srcset="assets/img/owner-desk-960.jpg 960w, assets/img/owner-desk-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 50vw" alt="A business owner working at their desk" loading="lazy" decoding="async">
+          </picture>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
       <div class="sec-head center">
         <span class="eyebrow">Our Portfolio</span>
         <h2 class="reveal">Where we <em class="ac">invest</em></h2>
@@ -902,9 +962,12 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       <div class="cta-copy">
         <span class="eyebrow">Contact</span>
         <h2>Do you have a <em class="ac">question?</em></h2>
-        <a class="btn btn-white" href="#/contact" data-link>Contact us
+        <div class="cta-foot">
+          <p>Every enquiry is treated in confidence.</p>
+          <a class="btn btn-white" href="#/contact" data-link>Contact us
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+          </a>
+        </div>
       </div>
       <div class="cta-media">
         <div class="shot">
@@ -1009,9 +1072,12 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       <div class="cta-copy">
         <span class="eyebrow">Contact</span>
         <h2>Do you have a <em class="ac">question?</em></h2>
-        <a class="btn btn-white" href="#/contact" data-link>Contact us
+        <div class="cta-foot">
+          <p>Every enquiry is treated in confidence.</p>
+          <a class="btn btn-white" href="#/contact" data-link>Contact us
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+          </a>
+        </div>
       </div>
       <div class="cta-media">
         <div class="shot">
@@ -1091,7 +1157,6 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         <h3>What this looks like in South Africa</h3>
         <p style="color:var(--ink-70)">Operating conditions here are their own discipline. Energy security, water reliability, logistics and municipal risk are real line items in a South African business plan, and we treat them as such — resilience planning, working capital design and supplier diversification are part of the value we add, not an afterthought.</p>
         <p style="color:var(--ink-70)">Ownership structure is also commercial. B-BBEE standing directly affects an SME's ability to hold and win corporate and public sector contracts, so we consider it in every transaction rather than treating it as a compliance exercise.</p>
-        <div class="flag">Placeholder to confirm: intended B-BBEE ownership level and verification approach for Peach Capital South Africa (Pty) Ltd.</div>
       </div>
     </div>
   </section>
@@ -1101,9 +1166,12 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       <div class="cta-copy">
         <span class="eyebrow">Contact</span>
         <h2>Do you have a <em class="ac">question?</em></h2>
-        <a class="btn btn-white" href="#/contact" data-link>Contact us
+        <div class="cta-foot">
+          <p>Every enquiry is treated in confidence.</p>
+          <a class="btn btn-white" href="#/contact" data-link>Contact us
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+          </a>
+        </div>
       </div>
       <div class="cta-media">
         <div class="shot">
@@ -1204,9 +1272,12 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       <div class="cta-copy">
         <span class="eyebrow">Contact</span>
         <h2>Do you have a <em class="ac">question?</em></h2>
-        <a class="btn btn-white" href="#/contact" data-link>Contact us
+        <div class="cta-foot">
+          <p>Every enquiry is treated in confidence.</p>
+          <a class="btn btn-white" href="#/contact" data-link>Contact us
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+          </a>
+        </div>
       </div>
       <div class="cta-media">
         <div class="shot">
@@ -1280,7 +1351,6 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
           </a>
         </article>
       </div>
-      <div class="flag" style="max-width:980px">Placeholder to confirm: photographs, and biography copy approved by each individual. The text above describes role scope only — no career history has been asserted. Please supply headshots and preferred bios before launch.</div>
     </div>
   </section>
 
@@ -1308,9 +1378,12 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       <div class="cta-copy">
         <span class="eyebrow">Contact</span>
         <h2>Want to talk to us <em class="ac">directly?</em></h2>
-        <a class="btn btn-white" href="#/contact" data-link>Contact us
+        <div class="cta-foot">
+          <p>Every enquiry is treated in confidence.</p>
+          <a class="btn btn-white" href="#/contact" data-link>Contact us
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+          </a>
+        </div>
       </div>
       <div class="cta-media">
         <div class="shot">
@@ -1371,7 +1444,6 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
           <div class="crit"><b>National</b><span>All nine provinces considered</span></div>
           <div class="crit"><b>Management</b><span>A capable team that wants to stay</span></div>
         </div>
-        <div class="flag">Placeholder to confirm: turnover floor, trading history minimum and stake preference. These figures make the page far more useful to sellers — please confirm or amend before launch.</div>
       </div>
     </div>
   </section>
@@ -1408,7 +1480,6 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
           <li><b>Weeks 8–12</b><span>Sale agreement, conditions precedent, regulatory approvals where required, and close.</span></li>
           <li><b>Post-close</b><span>Transition plan, reporting cadence, and the growth work begins.</span></li>
         </ul>
-        <div class="flag">Placeholder to confirm: indicative timeline. Competition Commission notification, where a merger is notifiable, will extend these periods.</div>
       </div>
     </div>
   </section>
@@ -1418,9 +1489,12 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       <div class="cta-copy">
         <span class="eyebrow">Acquisition Process</span>
         <h2>Thinking about selling your <em class="ac">business?</em></h2>
-        <a class="btn btn-white" href="#/contact" data-link>Start a confidential conversation
+        <div class="cta-foot">
+          <p>Confidentiality is in place from the first meeting, and nothing is shared with third parties without your agreement.</p>
+          <a class="btn btn-white" href="#/contact" data-link>Start a confidential conversation
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+          </a>
+        </div>
       </div>
       <div class="cta-media">
         <div class="shot">
@@ -1507,7 +1581,6 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       <div class="card stack reveal rd1">
         <h3>South African holdings</h3>
         <p style="color:var(--ink-70)">Our first South African acquisitions are in progress. Completed transactions will be published here, with sector, transaction structure and the value created.</p>
-        <div class="flag">Placeholder to confirm: once the first South African transaction closes, replace this section with case studies. Nothing builds credibility with sellers faster than a named deal with real before-and-after numbers.</div>
         <p><a class="arrowlink" href="#/our-approach" data-link>Learn about our approach
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a></p>
@@ -1520,9 +1593,12 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       <div class="cta-copy">
         <span class="eyebrow">Our Portfolio</span>
         <h2>Do you have a <em class="ac">question?</em></h2>
-        <a class="btn btn-white" href="#/contact" data-link>Contact us
+        <div class="cta-foot">
+          <p>Every enquiry is treated in confidence.</p>
+          <a class="btn btn-white" href="#/contact" data-link>Contact us
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+          </a>
+        </div>
       </div>
       <div class="cta-media">
         <div class="shot">
@@ -1625,9 +1701,12 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       <div class="cta-copy">
         <span class="eyebrow">Business Owners</span>
         <h2>Start a confidential <em class="ac">conversation</em></h2>
-        <a class="btn btn-white" href="#/contact" data-link>Contact us
+        <div class="cta-foot">
+          <p>Confidentiality from the first conversation.</p>
+          <a class="btn btn-white" href="#/contact" data-link>Contact us
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+          </a>
+        </div>
       </div>
       <div class="cta-media">
         <div class="shot">
@@ -1719,7 +1798,6 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
           <li><b>Reporting</b><span>Periodic portfolio reporting and valuation updates.</span></li>
           <li><b>Term and exit</b><span>Hold period and exit strategy defined per transaction.</span></li>
         </ul>
-        <div class="flag">Placeholder to confirm: fund structure, minimum commitment, fee basis, target return and hold period. This page must be reviewed by South African legal counsel before launch — see the regulatory notice in the footer.</div>
       </div>
     </div>
   </section>
@@ -1729,9 +1807,12 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       <div class="cta-copy">
         <span class="eyebrow">Investors</span>
         <h2>Request the investor information <em class="ac">pack</em></h2>
-        <a class="btn btn-white" href="#/contact" data-link>Get in touch
+        <div class="cta-foot">
+          <p>Open to qualified investors only. Verification is required before any information is shared.</p>
+          <a class="btn btn-white" href="#/contact" data-link>Get in touch
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+          </a>
+        </div>
       </div>
       <div class="cta-media">
         <div class="shot">
