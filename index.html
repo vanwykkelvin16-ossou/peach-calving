@@ -112,6 +112,11 @@ h4{font-size:1.02rem;letter-spacing:-.012em;line-height:1.3}
 p{margin:0 0 1.05em;text-wrap:pretty}
 p:last-child{margin-bottom:0}
 
+/* A whole sentence used as a heading is set smaller than a display
+   heading of two or three words — at display size it swamps its section. */
+.h2-sentence{font-size:clamp(1.45rem,2.3vw,2.05rem);line-height:1.2;letter-spacing:-.025em}
+.h2-sentence .ac{font-size:1.05em}
+
 /* the one editorial flourish: closing word of a heading */
 .ac{
   font-family:"Instrument Serif",Georgia,"Times New Roman",serif;
@@ -270,6 +275,8 @@ h2 .ac{font-size:1.06em}
 
 .hero-ctl-wrap{position:absolute;left:50%;transform:translateX(-50%);bottom:var(--s-5);
   z-index:3;width:min(100% - 48px,var(--wrap))}
+/* inner heroes are shorter, so the control sits clear of the copy */
+.banner .hero-ctl-wrap{text-align:right}
 .video-ctl{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.14);
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   border:1px solid rgba(255,255,255,.3);border-radius:var(--r-pill);color:#fff;
@@ -278,24 +285,37 @@ h2 .ac{font-size:1.06em}
 .video-ctl:hover{background:rgba(255,255,255,.26)}
 .video-ctl svg{width:12px;height:12px;flex:none}
 
-/* ─────────────────── INNER PAGE BANNER ─────────────────── */
+/* ─────────────────── INNER PAGE HERO ───────────────────
+   Same full-bleed media treatment as the home hero, at a shorter
+   measure. The scrim hue keeps the routing signal: green for
+   owner-facing pages, blue for investors, near-black for contact. */
 .banner{position:relative;overflow:hidden;color:#fff;background:var(--green-900);
-  padding:calc(var(--nav-h) + var(--s-8)) 0 var(--s-8)}
-.banner::before{content:"";position:absolute;inset:0;
-  background:radial-gradient(90% 130% at 88% 0%, rgba(46,125,91,.55) 0%, transparent 62%)}
-.banner::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;display:block;
+  display:grid;align-items:end;min-height:min(62vh,600px)}
+.banner .hero-scrim{
+  background:
+    linear-gradient(100deg, rgba(10,33,23,.95) 0%, rgba(10,33,23,.82) 40%, rgba(10,33,23,.42) 72%, rgba(10,33,23,.60) 100%),
+    linear-gradient(to top, rgba(10,33,23,.86) 0%, transparent 46%)}
+.banner--blue{background:var(--blue-950)}
+.banner--blue .hero-scrim{
+  background:
+    linear-gradient(100deg, rgba(0,7,31,.95) 0%, rgba(0,11,74,.84) 40%, rgba(0,11,74,.44) 72%, rgba(0,7,31,.62) 100%),
+    linear-gradient(to top, rgba(0,7,31,.88) 0%, transparent 46%)}
+.banner--black{background:#0A0A0A}
+.banner--black .hero-scrim{
+  background:
+    linear-gradient(100deg, rgba(6,8,7,.95) 0%, rgba(6,8,7,.84) 40%, rgba(10,33,23,.46) 72%, rgba(6,8,7,.62) 100%),
+    linear-gradient(to top, rgba(6,8,7,.88) 0%, transparent 46%)}
+/* four-colour rule closes the hero, as it does on the home page */
+.banner::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;z-index:4;
   background:linear-gradient(90deg,var(--flag-red) 0 25%,var(--flag-gold) 25% 50%,
     var(--flag-green) 50% 75%,var(--flag-blue) 75% 100%)}
-.banner--blue{background:var(--blue-950)}
-.banner--blue::before{background:radial-gradient(90% 130% at 88% 0%, rgba(27,47,168,.6) 0%, transparent 62%)}
-.banner--black{background:#0A0A0A}
-.banner--black::before{background:radial-gradient(90% 130% at 88% 0%, rgba(46,125,91,.42) 0%, transparent 62%)}
-.banner-in{position:relative;z-index:2;max-width:800px}
-/* the banner ground is dark, so the eyebrow takes the gold, not the green */
+.banner-in{position:relative;z-index:2;max-width:860px;
+  padding:calc(var(--nav-h) + var(--s-8)) 0 var(--s-8)}
+/* the ground is dark, so the eyebrow takes the gold, not the green */
 .banner .eyebrow{color:var(--gold)}
 .banner .eyebrow::before{background:var(--gold)}
-.banner h1{color:#fff;font-size:clamp(2.4rem,4.8vw,3.9rem)}
-.banner .lede{color:rgba(255,255,255,.84);margin-top:var(--s-4)}
+.banner h1{color:#fff;font-size:clamp(2.5rem,5.4vw,4.3rem)}
+.banner .lede{color:rgba(255,255,255,.86);margin-top:var(--s-4);max-width:54ch}
 
 /* ─────────────────────────── SECTIONS ─────────────────────────── */
 section{padding:var(--s-9) 0}
@@ -397,16 +417,26 @@ section{padding:var(--s-9) 0}
 .pausebtn:hover{border-color:var(--green-700);background:var(--mint)}
 .pausebtn svg{width:12px;height:12px;flex:none}
 
-/* ── team ── */
-.team{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-5);margin-top:var(--s-7);max-width:980px}
-.member{background:#fff;border:1px solid var(--line);border-radius:var(--r-xl);padding:var(--s-6);
-  transition:box-shadow var(--t-mid) var(--e-out),border-color var(--t-mid) var(--e-out)}
-.member:hover{box-shadow:var(--sh-2);border-color:var(--line-2)}
-.avatar{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;color:#fff;
-  font-size:1.7rem;font-weight:700;letter-spacing:-.03em;margin-bottom:var(--s-5);
-  background:linear-gradient(140deg,var(--green-600),var(--green-900))}
-.member:nth-child(2) .avatar{background:linear-gradient(140deg,var(--blue-500),var(--blue-950))}
-.member .role{color:var(--green-700);font-weight:600;font-size:.93rem;margin:6px 0 var(--s-3)}
+/* ── team: portrait panel, identity set beneath it ── */
+.team{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-6);margin-top:var(--s-7);
+  max-width:840px;margin-inline:auto}
+.member{display:flex;flex-direction:column}
+.portrait{position:relative;aspect-ratio:4/5;border-radius:var(--r-lg);overflow:hidden;
+  display:grid;place-items:center;margin-bottom:var(--s-5);
+  background:linear-gradient(150deg,var(--green-600),var(--green-950));
+  transition:transform var(--t-mid) var(--e-out),box-shadow var(--t-mid) var(--e-out)}
+.member:nth-child(2) .portrait{background:linear-gradient(150deg,var(--blue-500),var(--blue-950))}
+.portrait::before{content:"";position:absolute;inset:0;
+  background:radial-gradient(60% 50% at 70% 22%, rgba(255,255,255,.20), transparent 72%)}
+.member:hover .portrait{transform:translateY(-4px);box-shadow:var(--sh-2)}
+.initials{position:relative;z-index:2;color:#fff;font-size:clamp(3.4rem,6vw,5rem);font-weight:700;
+  letter-spacing:-.05em;line-height:1}
+/* the flag rule sits at the foot of each portrait */
+.portrait i{position:absolute;bottom:0;left:0;right:0;height:4px;z-index:3;
+  background:linear-gradient(90deg,var(--flag-red) 0 25%,var(--flag-gold) 25% 50%,
+    var(--flag-green) 50% 75%,var(--flag-blue) 75% 100%)}
+.member h3{font-size:clamp(1.5rem,2.2vw,1.9rem);letter-spacing:-.035em}
+.member .role{color:var(--ink-55);font-weight:400;font-size:.98rem;margin:var(--s-2) 0 var(--s-4)}
 .member p{color:var(--ink-70);font-size:.96rem}
 .li{display:inline-flex;align-items:center;gap:8px;margin-top:var(--s-4);font-weight:600;
   font-size:.92rem;color:var(--green-700);text-decoration:none;min-height:36px}
@@ -430,14 +460,23 @@ section{padding:var(--s-9) 0}
 .sec-dark .notes span{color:rgba(255,255,255,.72)}
 
 /* ─────────────────────────── CONTACT ─────────────────────────── */
-.contact-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:var(--s-8);align-items:start}
-.cbox{padding:var(--s-5) 0;border-top:1px solid var(--line)}
-.cbox:first-child{border-top:0;padding-top:0}
-.cbox h4{margin-bottom:6px}
-.cbox p{color:var(--ink-70);font-size:.96rem}
-.cbox a{font-weight:600;color:var(--green-700)}
-form{background:#fff;border:1px solid var(--line);border-radius:var(--r-xl);padding:var(--s-7);
-  box-shadow:var(--sh-1)}
+.contact-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:var(--s-8);align-items:start}
+.contact-intro{max-width:46ch}
+.contact-intro p{color:var(--ink-70);margin-top:var(--s-4)}
+.contact-rule{border:0;height:1px;background:var(--line);margin:var(--s-7) 0}
+/* icon tile, label, value — one row per way of reaching them */
+.crow{display:grid;grid-template-columns:52px 1fr;gap:var(--s-4);align-items:start;
+  padding:var(--s-5) 0;border-bottom:1px solid var(--line)}
+.crow:last-child{border-bottom:0}
+.crow .tile{width:52px;height:52px;border-radius:50%;margin:0}
+.crow .tile svg{width:21px;height:21px}
+.crow .lab{font-size:.92rem;color:var(--ink-55);margin:0 0 4px}
+.crow .val{font-size:1.12rem;font-weight:600;letter-spacing:-.02em;margin:0;line-height:1.35}
+.crow .val a{color:var(--ink);text-decoration:none;transition:color var(--t-fast) var(--e-out)}
+.crow .val a:hover{color:var(--green-700)}
+.crow .note{font-size:.95rem;color:var(--ink-70);margin:6px 0 0;font-weight:400;letter-spacing:0}
+/* the form sits in its own recessed panel, inputs lifted white off it */
+form{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-xl);padding:var(--s-7)}
 .tabs{display:flex;gap:6px;background:var(--paper);border-radius:var(--r-pill);padding:5px;
   margin-bottom:var(--s-5)}
 .tabs button{flex:1;font:inherit;font-weight:600;font-size:.93rem;padding:12px 14px;border:0;
@@ -534,6 +573,8 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 }
 @media(max-width:980px){
   .hero{min-height:auto}
+  .banner{min-height:auto}
+  .banner-in{padding:calc(var(--nav-h) + var(--s-7)) 0 calc(var(--s-7) + 44px)}
   .hero-in{grid-template-columns:1fr;gap:var(--s-7);
     padding:calc(var(--nav-h) + var(--s-8)) 0 calc(var(--s-8) + 44px)}
   .hero-card{margin-left:0;max-width:none}
@@ -617,7 +658,7 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <div class="page" id="p-home">
   <div class="hero">
     <div class="hero-media">
-      <video id="herovid" autoplay muted loop playsinline preload="metadata" aria-label="Peach Capital background footage" tabindex="-1">
+      <video id="herovid" class="bgvid" autoplay muted loop playsinline preload="metadata" tabindex="-1" aria-hidden="true">
         <source src="assets/hero.mp4" type="video/mp4">
       </video>
     </div>
@@ -648,13 +689,6 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       </div>
     </div>
 
-    <div class="hero-ctl-wrap">
-      <button class="video-ctl" id="vidbtn" type="button" aria-pressed="false">
-        <svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true" id="vpause"><rect x="2" y="1" width="3" height="10" rx="1"/><rect x="7" y="1" width="3" height="10" rx="1"/></svg>
-        <svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true" id="vplay" hidden><path d="M3 1.6v8.8a.8.8 0 0 0 1.22.68l7-4.4a.8.8 0 0 0 0-1.36l-7-4.4A.8.8 0 0 0 3 1.6Z"/></svg>
-        <span id="vlabel">Pause background video</span>
-      </button>
-    </div>
   </div>
 
   <section>
@@ -765,6 +799,12 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <!-- ══════════════════ WHO WE ARE ══════════════════ -->
 <div class="page" id="p-who-we-are">
   <div class="banner">
+    <div class="hero-media">
+      <video class="bgvid" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true">
+        <source src="assets/hero.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap banner-in">
       <span class="eyebrow">About Us</span>
       <h1>Who We <em class="ac">Are</em></h1>
@@ -840,6 +880,12 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <!-- ══════════════════ OUR APPROACH ══════════════════ -->
 <div class="page" id="p-our-approach">
   <div class="banner">
+    <div class="hero-media">
+      <video class="bgvid" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true">
+        <source src="assets/hero.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap banner-in">
       <span class="eyebrow">About Us</span>
       <h1>Our <em class="ac">Approach</em></h1>
@@ -900,6 +946,12 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <!-- ══════════════════ HOW WE ADD VALUE ══════════════════ -->
 <div class="page" id="p-how-we-add-value">
   <div class="banner">
+    <div class="hero-media">
+      <video class="bgvid" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true">
+        <source src="assets/hero.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap banner-in">
       <span class="eyebrow">About Us</span>
       <h1>How We Add <em class="ac">Value</em></h1>
@@ -971,18 +1023,30 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <!-- ══════════════════ OUR TEAM ══════════════════ -->
 <div class="page" id="p-our-team">
   <div class="banner">
+    <div class="hero-media">
+      <video class="bgvid" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true">
+        <source src="assets/hero.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap banner-in">
       <span class="eyebrow">About Us</span>
       <h1>Our <em class="ac">Team</em></h1>
-      <p class="lede">Business owners deal with the people who make the decisions. Here they are.</p>
     </div>
   </div>
 
   <section>
     <div class="wrap">
+      <div class="sec-head center">
+        <span class="eyebrow">Our Team</span>
+        <h2 class="h2-sentence reveal">Business owners deal with the people who make the decisions. Here they <em class="ac">are.</em></h2>
+      </div>
       <div class="team">
-        <article class="member reveal">
-          <div class="avatar" aria-hidden="true">BV</div>
+        <article class="member reveal rd1">
+          <div class="portrait">
+            <span class="initials" aria-hidden="true">BV</span>
+            <i aria-hidden="true"></i>
+          </div>
           <h3>Bevan Viljoen</h3>
           <div class="role">Chief Executive Officer</div>
           <p>Bevan leads Peach Capital South Africa's investment strategy, origination and portfolio oversight. He sets the mandate, chairs the investment committee and works directly with the management teams of portfolio businesses.</p>
@@ -990,8 +1054,11 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
             <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" style="width:13px;height:13px"><path d="M6 3h7v7M13 3L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
         </article>
-        <article class="member reveal rd1">
-          <div class="avatar" aria-hidden="true">CdB</div>
+        <article class="member reveal rd2">
+          <div class="portrait">
+            <span class="initials" aria-hidden="true">CdB</span>
+            <i aria-hidden="true"></i>
+          </div>
           <h3>Calvin de Bruin <span style="font-weight:500;font-size:1rem;color:var(--ink-55)">CA(SA)</span></h3>
           <div class="role">Chief Financial Officer</div>
           <p>Calvin, a Chartered Accountant (South Africa), leads financial due diligence, deal structuring, valuation and reporting across the portfolio. He is responsible for financial governance and for the post-acquisition finance function in the businesses we back.</p>
@@ -1034,6 +1101,12 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <!-- ══════════════════ ACQUISITION PROCESS ══════════════════ -->
 <div class="page" id="p-acquisition-process">
   <div class="banner">
+    <div class="hero-media">
+      <video class="bgvid" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true">
+        <source src="assets/hero.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap banner-in">
       <span class="eyebrow">Acquisition Process</span>
       <h1>The Acquisition <em class="ac">Process</em></h1>
@@ -1112,6 +1185,12 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <!-- ══════════════════ PORTFOLIO ══════════════════ -->
 <div class="page" id="p-our-portfolio">
   <div class="banner">
+    <div class="hero-media">
+      <video class="bgvid" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true">
+        <source src="assets/hero.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap banner-in">
       <span class="eyebrow">Our Portfolio</span>
       <h1>Our <em class="ac">Portfolio</em></h1>
@@ -1182,6 +1261,12 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <!-- ══════════════════ BUSINESS OWNERS ══════════════════ -->
 <div class="page" id="p-business-owners">
   <div class="banner">
+    <div class="hero-media">
+      <video class="bgvid" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true">
+        <source src="assets/hero.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap banner-in">
       <span class="eyebrow">Business Owners</span>
       <h1>For Business <em class="ac">Owners</em></h1>
@@ -1255,6 +1340,12 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <!-- ══════════════════ INVESTMENT OPPORTUNITIES ══════════════════ -->
 <div class="page" id="p-investment-opportunities">
   <div class="banner banner--blue">
+    <div class="hero-media">
+      <video class="bgvid" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true">
+        <source src="assets/hero.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap banner-in">
       <span class="eyebrow">Investors</span>
       <h1>Investment <em class="ac">Opportunities</em></h1>
@@ -1327,34 +1418,71 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <!-- ══════════════════ CONTACT ══════════════════ -->
 <div class="page" id="p-contact">
   <div class="banner banner--black">
+    <div class="hero-media">
+      <video class="bgvid" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true">
+        <source src="assets/hero.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap banner-in">
       <span class="eyebrow">Contact</span>
       <h1>Contact <em class="ac">Us</em></h1>
-      <p class="lede">Whether you're a business owner or an investor, we'd like to hear from you. Every enquiry is treated in confidence.</p>
     </div>
   </div>
 
   <section>
     <div class="wrap contact-grid">
       <div>
-        <div class="cbox">
-          <h4>Call us</h4>
-          <p>To discuss our investment process or acquisition model, speak to one of the team.</p>
-          <p><a href="tel:+27">+27 — to be confirmed</a></p>
+        <div class="contact-intro">
+          <h2 class="h2-sentence reveal">Whether you're a business owner or an investor, we'd like to hear from <em class="ac">you.</em></h2>
+          <p class="reveal rd1">Every enquiry is treated in confidence.</p>
         </div>
-        <div class="cbox">
-          <h4>Email us</h4>
-          <p>Reach our business development or support teams directly.</p>
-          <p><a href="mailto:hello@peachcapital.co.za">hello@peachcapital.co.za</a><br>
-             <a href="mailto:support@peachcapital.co.za">support@peachcapital.co.za</a></p>
-        </div>
-        <div class="cbox">
-          <h4>Visit us</h4>
-          <p>Head office address to be confirmed.<br>South Africa</p>
-        </div>
-        <div class="cbox">
-          <h4>Selling a business?</h4>
-          <p>Choose "I own a business" on the form. We'll sign a mutual NDA before any detailed information is exchanged, and nothing is discussed with third parties without your written agreement.</p>
+
+        <hr class="contact-rule">
+
+        <div class="reveal rd1">
+          <div class="crow">
+            <span class="tile" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5" width="19" height="14" rx="3" stroke="#2E7D5B" stroke-width="2"/><path d="M3.5 7l8.5 6 8.5-6" stroke="#FFB612" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <div>
+              <p class="lab">Email us</p>
+              <p class="val"><a href="mailto:hello@peachcapital.co.za">hello@peachcapital.co.za</a><br>
+                 <a href="mailto:support@peachcapital.co.za">support@peachcapital.co.za</a></p>
+              <p class="note">Reach our business development or support teams directly.</p>
+            </div>
+          </div>
+
+          <div class="crow">
+            <span class="tile" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 3.5h3.2l1.6 4-2 1.4a12 12 0 0 0 5.3 5.3l1.4-2 4 1.6V17c0 1.9-1.6 3.5-3.5 3.5A14.5 14.5 0 0 1 3.5 6 2.5 2.5 0 0 1 5 3.5Z" stroke="#2E7D5B" stroke-width="2" stroke-linejoin="round"/><circle cx="18.5" cy="5.5" r="2.5" fill="#FFB612"/></svg>
+            </span>
+            <div>
+              <p class="lab">Call us</p>
+              <p class="val"><a href="tel:+27">+27 — to be confirmed</a></p>
+              <p class="note">To discuss our investment process or acquisition model, speak to one of the team.</p>
+            </div>
+          </div>
+
+          <div class="crow">
+            <span class="tile" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 21.5s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z" stroke="#2E7D5B" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.6" fill="#FFB612"/></svg>
+            </span>
+            <div>
+              <p class="lab">Visit us</p>
+              <p class="val">Head office address to be confirmed.<br>South Africa</p>
+            </div>
+          </div>
+
+          <div class="crow">
+            <span class="tile" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M6 2.5h7l5 5v14H6z" stroke="#2E7D5B" stroke-width="2" stroke-linejoin="round"/><path d="M9 13h6M9 17h4" stroke="#FFB612" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+            <div>
+              <p class="lab">Selling a business?</p>
+              <p class="note" style="margin-top:0">Choose "I own a business" on the form. We'll sign a mutual NDA before any detailed information is exchanged, and nothing is discussed with third parties without your written agreement.</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1442,7 +1570,7 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         </div>
         <p class="err" id="popia-err" style="margin:var(--s-3) 0 0">You need to give consent before we can respond to your enquiry</p>
 
-        <button class="btn btn-green" type="submit" style="width:100%;margin-top:var(--s-5)">Send enquiry</button>
+        <button class="btn btn-green" type="submit" style="margin-top:var(--s-5)">Send enquiry</button>
         <p class="formnote">This is a demonstration build — the form does not yet submit anywhere. Connect it to your CRM or mail handler before launch.</p>
       </form>
     </div>
@@ -1541,12 +1669,37 @@ if(secSel) SECTORS.concat(["Other"]).forEach(s => {
 
 /* ── hero video: same pause rule as the marquee ──────────────────────── */
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-const vid = document.getElementById('herovid');
-const vidbtn = document.getElementById('vidbtn');
-if(vid && vidbtn){
-  const vlabel = document.getElementById('vlabel');
-  const vpause = document.getElementById('vpause');
-  const vplay  = document.getElementById('vplay');
+
+/* Every hero carries background footage, so each needs its own Pause, Stop,
+   Hide control (WCAG 2.2.2). The control is built here rather than repeated
+   in markup ten times, which keeps the two from drifting apart. */
+document.querySelectorAll('.bgvid').forEach(setupBackgroundVideo);
+
+function setupBackgroundVideo(vid){
+  const hero = vid.closest('.hero, .banner');
+  if(!hero) return;
+
+  let wrap = hero.querySelector('.hero-ctl-wrap');
+  if(!wrap){
+    wrap = document.createElement('div');
+    wrap.className = 'hero-ctl-wrap';
+    hero.appendChild(wrap);
+  }
+  let vidbtn = wrap.querySelector('.video-ctl');
+  if(!vidbtn){
+    vidbtn = document.createElement('button');
+    vidbtn.type = 'button';
+    vidbtn.className = 'video-ctl';
+    vidbtn.setAttribute('aria-pressed','false');
+    vidbtn.innerHTML =
+      '<svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true" data-p><rect x="2" y="1" width="3" height="10" rx="1"/><rect x="7" y="1" width="3" height="10" rx="1"/></svg>' +
+      '<svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true" data-r hidden><path d="M3 1.6v8.8a.8.8 0 0 0 1.22.68l7-4.4a.8.8 0 0 0 0-1.36l-7-4.4A.8.8 0 0 0 3 1.6Z"/></svg>' +
+      '<span data-l>Pause background video</span>';
+    wrap.appendChild(vidbtn);
+  }
+  const vlabel = vidbtn.querySelector('[data-l]');
+  const vpause = vidbtn.querySelector('[data-p]');
+  const vplay  = vidbtn.querySelector('[data-r]');
 
   /* `wantPaused` is the user's intent; it outranks the viewport observer.
      pause() stays synchronous so the control always responds at once — a
@@ -1584,7 +1737,7 @@ if(vid && vidbtn){
     if(wantPaused) pauseVideo(); else playVideo();
   });
 
-  /* don't decode a hero that has scrolled away */
+  /* only the hero on screen decodes; hidden routes never start at all */
   if('IntersectionObserver' in window){
     new IntersectionObserver(entries => {
       entries.forEach(e => {
