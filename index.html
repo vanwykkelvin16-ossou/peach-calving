@@ -128,7 +128,10 @@ h2 .ac{font-size:1.06em}
 
 .wrap{width:min(100% - 48px,var(--wrap));margin-inline:auto}
 .lede{font-size:clamp(1.05rem,1.35vw,1.2rem);line-height:1.55;color:var(--ink-70);max-width:60ch;text-wrap:pretty}
-.measure{max-width:66ch}
+/* constrain the line length without centring — copy stays flush to the
+   same left edge as the hero above it */
+.measure{max-width:none}
+.measure > *{max-width:66ch}
 .tnum{font-variant-numeric:tabular-nums}
 
 :focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:var(--r-sm)}
@@ -242,7 +245,7 @@ h2 .ac{font-size:1.06em}
 .hero{position:relative;overflow:hidden;color:#fff;background:var(--green-900);
   min-height:min(92vh,860px);display:grid;align-items:end}
 .hero-media{position:absolute;inset:0;z-index:0;overflow:hidden}
-.hero-media video{width:100%;height:100%;object-fit:cover;display:block}
+.hero-media img{width:100%;height:100%;object-fit:cover;display:block}
 /* scrim: keeps white type at 4.5:1 over any frame of the footage */
 .hero-scrim{position:absolute;inset:0;z-index:1;
   background:
@@ -255,13 +258,6 @@ h2 .ac{font-size:1.06em}
 .hero .lede{color:rgba(255,255,255,.86);max-width:44ch;margin-top:var(--s-5)}
 .hero .kicker{font-weight:600;color:#fff;margin-top:var(--s-3);font-size:1.05rem}
 .hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:var(--s-6)}
-/* flag rule as the hero's brand signature */
-.hero-flag{display:flex;gap:5px;margin-bottom:var(--s-5)}
-.hero-flag i{width:26px;height:4px;border-radius:2px;display:block}
-.hero-flag i:nth-child(1){background:var(--flag-red)}
-.hero-flag i:nth-child(2){background:var(--flag-gold)}
-.hero-flag i:nth-child(3){background:var(--flag-green)}
-.hero-flag i:nth-child(4){background:var(--flag-blue)}
 
 /* floating figure card, echoing the reference's overlap */
 .hero-card{background:#fff;color:var(--ink);border-radius:var(--r-xl);padding:var(--s-6);
@@ -273,18 +269,8 @@ h2 .ac{font-size:1.06em}
 .hero-card hr{border:0;height:1px;background:var(--line);margin:var(--s-5) 0}
 .hero-card h4{margin-bottom:6px}
 
-.hero-ctl-wrap{position:absolute;left:50%;transform:translateX(-50%);bottom:var(--s-5);
-  z-index:3;width:min(100% - 48px,var(--wrap))}
 /* inner heroes are shorter, so the control sits clear of the copy */
-.banner .hero-ctl-wrap{text-align:right}
-.video-ctl{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.14);
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,.3);border-radius:var(--r-pill);color:#fff;
-  padding:9px 17px;font:inherit;font-size:.82rem;font-weight:600;cursor:pointer;min-height:42px;
-  transition:background var(--t-fast) var(--e-out)}
-.video-ctl:hover{background:rgba(255,255,255,.26)}
-.video-ctl svg{width:12px;height:12px;flex:none}
-
+.banner 
 /* ─────────────────── INNER PAGE HERO ───────────────────
    Same full-bleed media treatment as the home hero, at a shorter
    measure. The scrim hue keeps the routing signal: green for
@@ -305,12 +291,9 @@ h2 .ac{font-size:1.06em}
   background:
     linear-gradient(100deg, rgba(6,8,7,.95) 0%, rgba(6,8,7,.84) 40%, rgba(10,33,23,.46) 72%, rgba(6,8,7,.62) 100%),
     linear-gradient(to top, rgba(6,8,7,.88) 0%, transparent 46%)}
-/* four-colour rule closes the hero, as it does on the home page */
-.banner::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;z-index:4;
-  background:linear-gradient(90deg,var(--flag-red) 0 25%,var(--flag-gold) 25% 50%,
-    var(--flag-green) 50% 75%,var(--flag-blue) 75% 100%)}
-.banner-in{position:relative;z-index:2;max-width:860px;
+.banner-in{position:relative;z-index:2;max-width:none;
   padding:calc(var(--nav-h) + var(--s-8)) 0 var(--s-8)}
+.banner-in > *{max-width:860px}
 /* the ground is dark, so the eyebrow takes the gold, not the green */
 .banner .eyebrow{color:var(--gold)}
 .banner .eyebrow::before{background:var(--gold)}
@@ -361,12 +344,17 @@ section{padding:var(--s-9) 0}
 
 /* ── audience: media panel with an overlapping info card ── */
 .audience{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-6);margin-top:var(--s-7)}
-.aud{position:relative;border-radius:var(--r-xl);overflow:hidden;min-height:430px;display:flex;
+.aud{position:relative;border-radius:var(--r-xl);overflow:hidden;min-height:470px;display:flex;
   align-items:flex-end;padding:var(--s-5);
   background:linear-gradient(150deg,var(--green-600),var(--green-900))}
 .aud:nth-child(2){background:linear-gradient(150deg,var(--blue-500),var(--blue-950))}
-.aud::before{content:"";position:absolute;inset:0;
-  background:radial-gradient(70% 60% at 78% 18%, rgba(255,255,255,.18), transparent 70%)}
+.aud picture,.aud img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* a wash in the routing colour ties each photograph to its audience */
+.aud::before{content:"";position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to top, rgba(10,33,23,.55) 0%, rgba(10,33,23,.10) 55%, transparent 100%)}
+.aud:nth-child(2)::before{
+  background:linear-gradient(to top, rgba(0,7,31,.58) 0%, rgba(0,11,74,.12) 55%, transparent 100%)}
+.aud > .aud-card{margin-top:auto}
 .aud-card{position:relative;z-index:2;background:#fff;border-radius:var(--r-lg);padding:var(--s-6);
   box-shadow:var(--sh-2)}
 .aud-card h3{margin-bottom:var(--s-3)}
@@ -416,6 +404,50 @@ section{padding:var(--s-9) 0}
   transition:border-color var(--t-fast) var(--e-out),background var(--t-fast) var(--e-out)}
 .pausebtn:hover{border-color:var(--green-700);background:var(--mint)}
 .pausebtn svg{width:12px;height:12px;flex:none}
+
+/* ── photography ──
+   One rounded frame for every photograph on the site, so the crop, radius
+   and lift read the same wherever a picture appears. */
+.shot{position:relative;border-radius:var(--r-xl);overflow:hidden;background:var(--mint)}
+.shot img{width:100%;height:100%;object-fit:cover;display:block}
+.shot--tall{aspect-ratio:4/5}
+.shot--wide{aspect-ratio:16/10}
+.shot--square{aspect-ratio:1/1}
+
+/* ── capability strip: icon beside the title, description under it ── */
+.strip{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-6) var(--s-5);
+  padding:var(--s-7) 0;border-bottom:1px solid var(--line)}
+.sitem{display:grid;grid-template-columns:44px 1fr;gap:var(--s-3);align-items:start}
+.sitem .tile{width:44px;height:44px;border-radius:50%;margin:0}
+.sitem .tile svg{width:20px;height:20px}
+.sitem h3{font-size:1.06rem;letter-spacing:-.02em;margin:9px 0 0;grid-column:2}
+.sitem p{color:var(--ink-70);font-size:.94rem;margin:var(--s-2) 0 0;grid-column:2;max-width:26ch}
+
+/* ── trust row: icon and title share a line, lead card carries the tint ── */
+.trust{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-4);margin-top:var(--s-7)}
+.tcard{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:var(--s-5) var(--s-5) var(--s-6);
+  transition:border-color var(--t-mid) var(--e-out),box-shadow var(--t-mid) var(--e-out)}
+.tcard:hover{border-color:var(--line-2);box-shadow:var(--sh-1)}
+.tcard--lead{background:var(--mint);border-color:transparent}
+.tcard--lead h3{color:var(--green-700)}
+.tcard-h{display:flex;align-items:center;gap:11px;margin-bottom:var(--s-3)}
+.tcard-h svg{width:22px;height:22px;flex:none}
+.tcard h3{font-size:1.12rem;letter-spacing:-.02em;margin:0}
+.tcard p{color:var(--ink-70);font-size:.96rem;margin:0}
+
+/* ── feature: photograph beside a text column with a hairline list ── */
+.feature{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-8);align-items:center;margin-top:var(--s-8)}
+.feature .shot{aspect-ratio:4/5}
+.feature h3{font-size:clamp(1.7rem,2.8vw,2.35rem);letter-spacing:-.035em}
+.feature > div > p{color:var(--ink-70);margin-top:var(--s-4)}
+.frow{display:grid;grid-template-columns:44px 1fr;gap:var(--s-4);align-items:start;
+  padding:var(--s-5) 0;border-top:1px solid var(--line)}
+.frow:first-of-type{margin-top:var(--s-6)}
+.frow:last-child{border-bottom:1px solid var(--line)}
+.frow .tile{width:44px;height:44px;border-radius:50%;margin:0}
+.frow .tile svg{width:19px;height:19px}
+.frow h4{font-size:1.06rem;margin-bottom:3px}
+.frow p{color:var(--ink-70);font-size:.95rem;margin:0}
 
 /* ── team: portrait panel, identity set beneath it ── */
 .team{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-6);margin-top:var(--s-7);
@@ -512,23 +544,35 @@ form{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-
 .errsum a{color:var(--red-deep);font-weight:600}
 
 /* ─────────────────────────── CTA + FOOTER ─────────────────────────── */
-.cta-band{position:relative;overflow:hidden;background:var(--green-900);color:#fff;
-  border-radius:var(--r-xl);padding:var(--s-8) var(--s-7);margin:var(--s-9) 0;
-  display:flex;align-items:center;justify-content:space-between;gap:var(--s-6);flex-wrap:wrap}
+/* ── closing CTA: solid brand panel, copy left, photograph right with a
+      figure card lifted over its lower corner ── */
+.cta-band{position:relative;overflow:hidden;background:var(--green-700);color:#fff;
+  border-radius:var(--r-xl);margin:var(--s-9) 0;
+  display:grid;grid-template-columns:1fr 1fr;gap:var(--s-7);align-items:center;
+  padding:var(--s-8)}
 .cta-band::before{content:"";position:absolute;inset:0;
-  background:radial-gradient(80% 140% at 88% 10%, rgba(46,125,91,.6) 0%, transparent 62%)}
-.cta-band--blue{background:var(--blue-950)}
-.cta-band--blue::before{background:radial-gradient(80% 140% at 88% 10%, rgba(27,47,168,.7) 0%, transparent 62%)}
+  background:radial-gradient(70% 120% at 10% 0%, rgba(255,255,255,.10) 0%, transparent 60%)}
+.cta-band--blue{background:var(--blue-700)}
 .cta-band--red{background:var(--red-deep)}
-.cta-band--red::before{background:radial-gradient(80% 140% at 88% 10%, rgba(224,60,49,.75) 0%, transparent 62%)}
 .cta-band > *{position:relative;z-index:2}
-.cta-band h2{color:#fff;max-width:19ch}
-.cta-flag{display:flex;gap:4px;margin-bottom:var(--s-4)}
-.cta-flag i{width:22px;height:3px;border-radius:2px}
-.cta-flag i:nth-child(1){background:var(--flag-red)}
-.cta-flag i:nth-child(2){background:var(--flag-gold)}
-.cta-flag i:nth-child(3){background:var(--flag-green)}
-.cta-flag i:nth-child(4){background:var(--flag-blue)}
+.cta-band h2{color:#fff;max-width:16ch}
+.cta-copy .eyebrow{color:#fff;margin-bottom:var(--s-5)}
+.cta-copy .eyebrow::before{background:rgba(255,255,255,.85)}
+.cta-copy p{color:rgba(255,255,255,.88);margin-top:var(--s-6);max-width:42ch}
+.cta-copy .btn{margin-top:var(--s-6)}
+.cta-media{position:relative}
+.cta-media .shot{aspect-ratio:16/11;border-radius:var(--r-lg)}
+/* the figure card overlaps the photograph's lower corner */
+.cta-card{position:absolute;right:var(--s-5);bottom:calc(-1 * var(--s-5));z-index:3;
+  background:#fff;color:var(--ink);border-radius:var(--r-lg);padding:var(--s-5);
+  box-shadow:var(--sh-float);display:grid;grid-template-columns:auto 1fr;gap:var(--s-4);
+  align-items:center;max-width:340px}
+.cta-card .shot{width:96px;aspect-ratio:1/1;border-radius:var(--r-md);flex:none}
+.cta-card .fig{font-size:1.5rem;font-weight:700;letter-spacing:-.04em;color:var(--green-700);
+  line-height:1;display:block;margin-bottom:6px}
+.cta-band--blue .cta-card .fig{color:var(--blue-700)}
+.cta-band--red .cta-card .fig{color:var(--red-deep)}
+.cta-card p{font-size:.9rem;color:var(--ink-70);margin:0;line-height:1.4}
 
 footer{background:var(--ink);color:rgba(255,255,255,.72);padding:var(--s-8) 0 var(--s-6);font-size:.93rem}
 .f-top{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:var(--s-7);padding-bottom:var(--s-7);
@@ -579,7 +623,13 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
     padding:calc(var(--nav-h) + var(--s-8)) 0 calc(var(--s-8) + 44px)}
   .hero-card{margin-left:0;max-width:none}
   .split,.split-wide,.contact-grid{grid-template-columns:1fr;gap:var(--s-7)}
-  .grid-3,.grid-2,.crit-grid,.audience,.team,.steps{grid-template-columns:1fr}
+  .grid-3,.grid-2,.crit-grid,.audience,.team,.steps,.trust{grid-template-columns:1fr}
+  .strip{grid-template-columns:1fr 1fr;gap:var(--s-6) var(--s-5)}
+  .feature{grid-template-columns:1fr;gap:var(--s-6)}
+  .feature .shot{aspect-ratio:16/10}
+  .cta-band{grid-template-columns:1fr;padding:var(--s-7) var(--s-6) var(--s-8)}
+  .cta-media{margin-top:var(--s-4)}
+  .cta-card{position:static;max-width:none;margin-top:var(--s-4);box-shadow:var(--sh-2)}
   .statrow,.statrow.four{grid-template-columns:1fr 1fr}
   .statc{border-right:0;border-bottom:1px solid var(--line-light);padding-right:var(--s-4)}
   .statc .lab{min-height:0}
@@ -591,11 +641,12 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   .aud{min-height:360px}
 }
 @media(max-width:560px){
-  .wrap,.hero-in,.hero-ctl-wrap{width:min(100% - 32px,var(--wrap))}
-  .row2{grid-template-columns:1fr}
+  .wrap,.hero-in,  .row2{grid-template-columns:1fr}
   .statrow,.statrow.four{grid-template-columns:1fr}
   .phase{grid-template-columns:1fr;gap:var(--s-4)}
   .hero-cta .btn{width:100%}
+  .strip{grid-template-columns:1fr}
+  .trust{gap:var(--s-3)}
   .cta-band{flex-direction:column;align-items:flex-start}
 }
 
@@ -658,15 +709,15 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <div class="page" id="p-home">
   <div class="hero">
     <div class="hero-media">
-      <video id="herovid" class="bgvid" autoplay muted loop playsinline preload="metadata" tabindex="-1" aria-hidden="true">
-        <source src="assets/hero.mp4" type="video/mp4">
-      </video>
-    </div>
+        <picture>
+          <source type="image/webp" srcset="assets/img/partnership-960.webp 960w, assets/img/partnership-1920.webp 1920w" sizes="100vw">
+          <img src="assets/img/partnership-1920.jpg" srcset="assets/img/partnership-960.jpg 960w, assets/img/partnership-1920.jpg 1920w" sizes="100vw" alt="Two business partners reviewing figures on a tablet" loading="eager" fetchpriority="high" decoding="async">
+        </picture>
+      </div>
     <div class="hero-scrim" aria-hidden="true"></div>
 
     <div class="hero-in">
       <div>
-        <div class="hero-flag reveal" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
         <h1 class="reveal rd1">Purpose-Driven Private <em class="ac">Equity</em></h1>
         <p class="lede reveal rd2">At Peach Capital, we believe ambition deserves the right backing. We invest in South African SMEs with the vision and potential to grow, providing the expertise and capital needed to unlock success.</p>
         <p class="kicker reveal rd2">With us, businesses don't just survive — they thrive.</p>
@@ -692,39 +743,94 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   </div>
 
   <section>
-    <div class="wrap split split-wide">
-      <div>
-        <h2 class="reveal">Backing the businesses that hold South Africa <em class="ac">together</em></h2>
+    <div class="wrap">
+      <div class="strip">
+        <div class="sitem reveal">
+          <span class="tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="14" rx="3" stroke="#2E7D5B" stroke-width="2"/><path d="M8 6V4.6A1.6 1.6 0 0 1 9.6 3h4.8A1.6 1.6 0 0 1 16 4.6V6" stroke="#2E7D5B" stroke-width="2"/><path d="M9.5 13h5" stroke="#FFB612" stroke-width="2" stroke-linecap="round"/></svg></span>
+          <h3>Acquisition capital</h3>
+          <p>Full or majority purchase of established, profitable businesses.</p>
+        </div>
+        <div class="sitem reveal rd1">
+          <span class="tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 16.5 9.5 11l3.5 3 6-6.5" stroke="#2E7D5B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.5 7.5H19V12" stroke="#FFB612" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <h3>Growth equity</h3>
+          <p>Capital for expansion, equipment, capacity or new markets.</p>
+        </div>
+        <div class="sitem reveal rd2">
+          <span class="tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3.5 18c0-3.3 2.9-6 6.5-6s6.5 2.7 6.5 6" stroke="#2E7D5B" stroke-width="2" stroke-linecap="round"/><circle cx="10" cy="7" r="3.4" stroke="#2E7D5B" stroke-width="2"/><path d="M17 9.5h5M19.5 7v5" stroke="#FFB612" stroke-width="2" stroke-linecap="round"/></svg></span>
+          <h3>Succession funding</h3>
+          <p>Structured buyouts that let owners exit while the business continues.</p>
+        </div>
+        <div class="sitem reveal rd3">
+          <span class="tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v14H6z" stroke="#2E7D5B" stroke-width="2" stroke-linejoin="round"/><path d="M9.5 12h5M9.5 16h3.5" stroke="#FFB612" stroke-width="2" stroke-linecap="round"/></svg></span>
+          <h3>Consultancy</h3>
+          <p>Advisory for businesses we don't own, on strategy, operations and sale readiness.</p>
+        </div>
       </div>
-      <div class="stack">
+
+      <div class="sec-head" style="margin-top:var(--s-8)">
+        <span class="eyebrow">Our Approach</span>
+        <h2 class="reveal">Backing the businesses that hold South Africa <em class="ac">together</em></h2>
         <p class="lede reveal rd1">Our mission is to empower South African SMEs to reach their full potential through strategic investment, expert guidance and unwavering support.</p>
-        <p class="reveal rd2">We exist to level the playing field, giving ambitious businesses the tools and confidence to grow, compete and lead. We focus on building enterprise value, not just boosting short-term profits, because real value sits in strong foundations, scalable operations and predictable performance.</p>
-        <p class="reveal rd3"><a class="arrowlink" href="#/our-approach" data-link>Learn about our approach
+      </div>
+
+      <div class="trust">
+        <div class="tcard tcard--lead reveal rd1">
+          <div class="tcard-h">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="3" stroke="#2E7D5B" stroke-width="2"/><path d="M9 7V5.5A2.5 2.5 0 0 1 11.5 3h1A2.5 2.5 0 0 1 15 5.5V7" stroke="#2E7D5B" stroke-width="2"/><path d="M3 13h18" stroke="#FFB612" stroke-width="2"/></svg>
+            <h3>Portfolio</h3>
+          </div>
+          <p>South African holdings — first acquisitions in progress</p>
+        </div>
+        <div class="tcard reveal rd2">
+          <div class="tcard-h">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="#2E7D5B" stroke-width="2"/><path d="M3.5 12h17M12 3.2c2.4 2.4 3.6 5.4 3.6 8.8S14.4 18.4 12 20.8c-2.4-2.4-3.6-5.4-3.6-8.8S9.6 5.6 12 3.2Z" stroke="#FFB612" stroke-width="1.8"/></svg>
+            <h3>Mandate</h3>
+          </div>
+          <p>National, across all nine provinces</p>
+        </div>
+        <div class="tcard reveal rd3">
+          <div class="tcard-h">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v18" stroke="#FFB612" stroke-width="2" stroke-linecap="round"/><path d="M16.5 7.2A4.2 4.2 0 0 0 12.6 5h-1.2a3.4 3.4 0 0 0 0 6.8h1.2a3.4 3.4 0 0 1 0 6.8h-1.2a4.2 4.2 0 0 1-3.9-2.2" stroke="#2E7D5B" stroke-width="2" stroke-linecap="round"/></svg>
+            <h3>Cheque size</h3>
+          </div>
+          <p>R5m – R50m equity per transaction</p>
+        </div>
+      </div>
+
+      <div class="stack" style="margin-top:var(--s-8);max-width:66ch">
+        <p class="reveal">We exist to level the playing field, giving ambitious businesses the tools and confidence to grow, compete and lead. We focus on building enterprise value, not just boosting short-term profits, because real value sits in strong foundations, scalable operations and predictable performance.</p>
+        <p class="reveal"><a class="arrowlink" href="#/our-approach" data-link>Learn about our approach
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a></p>
       </div>
-    </div>
-  </section>
 
-  <section class="sec-dark on-dark">
-    <div class="wrap">
-      <div class="sec-head">
-        <h2 class="reveal">Proven in the United Kingdom. Now building in South <em class="ac">Africa.</em></h2>
-        <p class="lede reveal rd1">Peach Capital South Africa shares its ownership and operating model with Peach Capital in the UK. The figures below are the UK group's current position — the South African portfolio is being assembled now.</p>
-      </div>
+      <div class="feature">
+        <div class="shot reveal rd1">
+          <picture>
+            <source type="image/webp" srcset="assets/img/financial-review-960.webp 960w, assets/img/financial-review-1920.webp 1920w" sizes="(max-width:980px) 100vw, 50vw">
+            <img src="assets/img/financial-review-1920.jpg" srcset="assets/img/financial-review-960.jpg 960w, assets/img/financial-review-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 50vw" alt="A meeting reviewing financial statements and charts" loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <div class="reveal rd2">
+          <h3>Proven in the United Kingdom. Now building in South <em class="ac">Africa.</em></h3>
+          <p>Peach Capital South Africa shares its ownership and operating model with Peach Capital in the UK. The figures below are the UK group's current position — the South African portfolio is being assembled now.</p>
 
-      <div class="statrow reveal rd2">
-        <div class="statc"><p class="lab">UK group enterprise value</p><span class="fig tnum">£40M</span></div>
-        <div class="statc"><p class="lab">UK group turnover</p><span class="fig tnum">£35M</span></div>
-        <div class="statc"><p class="lab">UK group profit</p><span class="fig tnum">£19M</span></div>
-      </div>
-      <div class="statrow four reveal rd3">
-        <div class="statc"><p class="lab">South African holdings — first acquisitions in progress</p><span class="fig sm">Portfolio</span></div>
-        <div class="statc"><p class="lab">National, across all nine provinces</p><span class="fig sm">Mandate</span></div>
-        <div class="statc"><p class="lab">R5m – R50m equity per transaction</p><span class="fig sm">Cheque size</span></div>
-      </div>
+          <div class="frow">
+            <span class="tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20h16" stroke="#FFB612" stroke-width="2" stroke-linecap="round"/><path d="M7 20V9M12 20V4M17 20v-7" stroke="#2E7D5B" stroke-width="2" stroke-linecap="round"/></svg></span>
+            <div><h4 class="tnum">£40M</h4><p>UK group enterprise value</p></div>
+          </div>
+          <div class="frow">
+            <span class="tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 15.5 9 10l4 3.5 6.5-7" stroke="#2E7D5B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19.5" cy="6.5" r="2.5" fill="#FFB612"/></svg></span>
+            <div><h4 class="tnum">£35M</h4><p>UK group turnover</p></div>
+          </div>
+          <div class="frow">
+            <span class="tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="#2E7D5B" stroke-width="2"/><path d="M12 7.5v9M9.6 9.6h4.2a2.1 2.1 0 0 1 0 4.2h-3.6a2.1 2.1 0 0 0 0 4.2h4.2" stroke="#FFB612" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+            <div><h4 class="tnum">£19M</h4><p>UK group profit</p></div>
+          </div>
 
-      <div class="flag">Placeholder to confirm: UK figures are shown as group results and must be verifiable and correctly dated before launch. South African numbers to be added as the portfolio builds.</div>
+          <div class="flag">Placeholder to confirm: UK figures are shown as group results and must be verifiable and correctly dated before launch. South African numbers to be added as the portfolio builds.</div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -735,6 +841,10 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       </div>
       <div class="audience">
         <article class="aud reveal rd1">
+          <picture>
+            <source type="image/webp" srcset="assets/img/owner-desk-960.webp 960w, assets/img/owner-desk-1920.webp 1920w" sizes="(max-width:980px) 100vw, 50vw">
+            <img src="assets/img/owner-desk-1920.jpg" srcset="assets/img/owner-desk-960.jpg 960w, assets/img/owner-desk-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 50vw" alt="A business owner working at their desk" loading="lazy" decoding="async">
+          </picture>
           <div class="aud-card">
             <h3>Are you a business owner?</h3>
             <p>If you're looking to grow, streamline or prepare your company for a future sale, we provide the capital, expertise and hands-on support to unlock value. From scaling operations to succession planning, we build a clear, actionable strategy with you — and stay to help implement it.</p>
@@ -744,6 +854,10 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
           </div>
         </article>
         <article class="aud reveal rd2">
+          <picture>
+            <source type="image/webp" srcset="assets/img/market-analysis-960.webp 960w, assets/img/market-analysis-1920.webp 1920w" sizes="(max-width:980px) 100vw, 50vw">
+            <img src="assets/img/market-analysis-1920.jpg" srcset="assets/img/market-analysis-960.jpg 960w, assets/img/market-analysis-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 50vw" alt="Two colleagues analysing performance on a laptop" loading="lazy" decoding="async">
+          </picture>
           <div class="aud-card">
             <h3>Are you an investor or buyer?</h3>
             <p>We give qualified investors access to South African SMEs that are profitable, proven and ready for their next chapter. We don't just invest — we improve performance, optimise operations and position businesses for profitable exits, with transparent structures throughout.</p>
@@ -784,14 +898,34 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   </section>
 
   <div class="wrap">
-    <div class="cta-band">
-      <div>
-        <div class="cta-flag" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-        <h2>Do you have a question?</h2>
+    <div class="cta-band reveal">
+      <div class="cta-copy">
+        <span class="eyebrow">Contact</span>
+        <h2>Do you have a <em class="ac">question?</em></h2>
+        <a class="btn btn-white" href="#/contact" data-link>Contact us
+          <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
       </div>
-      <a class="btn btn-gold" href="#/contact" data-link>Contact us
-        <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
+      <div class="cta-media">
+        <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/partnership-960.webp 960w, assets/img/partnership-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
+            <img src="assets/img/partnership-960.jpg" srcset="assets/img/partnership-960.jpg 960w, assets/img/partnership-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="Two business partners reviewing figures on a tablet" loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <div class="cta-card">
+          <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="96px">
+            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+          </picture>
+          </div>
+          <div>
+            <span class="fig tnum">R5m – R50m</span>
+            <p>Typical equity per transaction</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -800,10 +934,11 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <div class="page" id="p-who-we-are">
   <div class="banner">
     <div class="hero-media">
-      <video class="bgvid" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true">
-        <source src="assets/hero.mp4" type="video/mp4">
-      </video>
-    </div>
+        <picture>
+          <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="100vw">
+          <img src="assets/img/team-desk-1920.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="100vw" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+        </picture>
+      </div>
     <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap banner-in">
       <span class="eyebrow">About Us</span>
@@ -870,9 +1005,34 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   </section>
 
   <div class="wrap">
-    <div class="cta-band">
-      <div><div class="cta-flag" aria-hidden="true"><i></i><i></i><i></i><i></i></div><h2>Do you have a question?</h2></div>
-      <a class="btn btn-gold" href="#/contact" data-link>Contact us</a>
+    <div class="cta-band reveal">
+      <div class="cta-copy">
+        <span class="eyebrow">Contact</span>
+        <h2>Do you have a <em class="ac">question?</em></h2>
+        <a class="btn btn-white" href="#/contact" data-link>Contact us
+          <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="cta-media">
+        <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
+            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <div class="cta-card">
+          <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="96px">
+            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+          </picture>
+          </div>
+          <div>
+            <span class="fig tnum">National</span>
+            <p>All nine provinces considered</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -881,10 +1041,11 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <div class="page" id="p-our-approach">
   <div class="banner">
     <div class="hero-media">
-      <video class="bgvid" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true">
-        <source src="assets/hero.mp4" type="video/mp4">
-      </video>
-    </div>
+        <picture>
+          <source type="image/webp" srcset="assets/img/market-analysis-960.webp 960w, assets/img/market-analysis-1920.webp 1920w" sizes="100vw">
+          <img src="assets/img/market-analysis-1920.jpg" srcset="assets/img/market-analysis-960.jpg 960w, assets/img/market-analysis-1920.jpg 1920w" sizes="100vw" alt="Two colleagues analysing performance on a laptop" loading="lazy" decoding="async">
+        </picture>
+      </div>
     <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap banner-in">
       <span class="eyebrow">About Us</span>
@@ -936,9 +1097,34 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   </section>
 
   <div class="wrap">
-    <div class="cta-band">
-      <div><div class="cta-flag" aria-hidden="true"><i></i><i></i><i></i><i></i></div><h2>Do you have a question?</h2></div>
-      <a class="btn btn-gold" href="#/contact" data-link>Contact us</a>
+    <div class="cta-band reveal">
+      <div class="cta-copy">
+        <span class="eyebrow">Contact</span>
+        <h2>Do you have a <em class="ac">question?</em></h2>
+        <a class="btn btn-white" href="#/contact" data-link>Contact us
+          <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="cta-media">
+        <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/market-analysis-960.webp 960w, assets/img/market-analysis-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
+            <img src="assets/img/market-analysis-960.jpg" srcset="assets/img/market-analysis-960.jpg 960w, assets/img/market-analysis-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="Two colleagues analysing performance on a laptop" loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <div class="cta-card">
+          <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="96px">
+            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+          </picture>
+          </div>
+          <div>
+            <span class="fig tnum">R5m – R50m</span>
+            <p>Typical equity per transaction</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -947,10 +1133,11 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <div class="page" id="p-how-we-add-value">
   <div class="banner">
     <div class="hero-media">
-      <video class="bgvid" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true">
-        <source src="assets/hero.mp4" type="video/mp4">
-      </video>
-    </div>
+        <picture>
+          <source type="image/webp" srcset="assets/img/financial-review-960.webp 960w, assets/img/financial-review-1920.webp 1920w" sizes="100vw">
+          <img src="assets/img/financial-review-1920.jpg" srcset="assets/img/financial-review-960.jpg 960w, assets/img/financial-review-1920.jpg 1920w" sizes="100vw" alt="A meeting reviewing financial statements and charts" loading="lazy" decoding="async">
+        </picture>
+      </div>
     <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap banner-in">
       <span class="eyebrow">About Us</span>
@@ -1013,9 +1200,34 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   </section>
 
   <div class="wrap">
-    <div class="cta-band">
-      <div><div class="cta-flag" aria-hidden="true"><i></i><i></i><i></i><i></i></div><h2>Do you have a question?</h2></div>
-      <a class="btn btn-gold" href="#/contact" data-link>Contact us</a>
+    <div class="cta-band reveal">
+      <div class="cta-copy">
+        <span class="eyebrow">Contact</span>
+        <h2>Do you have a <em class="ac">question?</em></h2>
+        <a class="btn btn-white" href="#/contact" data-link>Contact us
+          <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="cta-media">
+        <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/financial-review-960.webp 960w, assets/img/financial-review-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
+            <img src="assets/img/financial-review-960.jpg" srcset="assets/img/financial-review-960.jpg 960w, assets/img/financial-review-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="A meeting reviewing financial statements and charts" loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <div class="cta-card">
+          <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="96px">
+            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+          </picture>
+          </div>
+          <div>
+            <span class="fig tnum">R5m – R50m</span>
+            <p>Typical equity per transaction</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1024,10 +1236,11 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <div class="page" id="p-our-team">
   <div class="banner">
     <div class="hero-media">
-      <video class="bgvid" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true">
-        <source src="assets/hero.mp4" type="video/mp4">
-      </video>
-    </div>
+        <picture>
+          <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="100vw">
+          <img src="assets/img/team-desk-1920.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="100vw" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+        </picture>
+      </div>
     <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap banner-in">
       <span class="eyebrow">About Us</span>
@@ -1091,9 +1304,34 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   </section>
 
   <div class="wrap">
-    <div class="cta-band">
-      <div><div class="cta-flag" aria-hidden="true"><i></i><i></i><i></i><i></i></div><h2>Want to talk to us directly?</h2></div>
-      <a class="btn btn-gold" href="#/contact" data-link>Contact us</a>
+    <div class="cta-band reveal">
+      <div class="cta-copy">
+        <span class="eyebrow">Contact</span>
+        <h2>Want to talk to us <em class="ac">directly?</em></h2>
+        <a class="btn btn-white" href="#/contact" data-link>Contact us
+          <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="cta-media">
+        <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
+            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <div class="cta-card">
+          <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="96px">
+            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+          </picture>
+          </div>
+          <div>
+            <span class="fig tnum">National</span>
+            <p>All nine provinces considered</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1102,10 +1340,11 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <div class="page" id="p-acquisition-process">
   <div class="banner">
     <div class="hero-media">
-      <video class="bgvid" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true">
-        <source src="assets/hero.mp4" type="video/mp4">
-      </video>
-    </div>
+        <picture>
+          <source type="image/webp" srcset="assets/img/financial-review-960.webp 960w, assets/img/financial-review-1920.webp 1920w" sizes="100vw">
+          <img src="assets/img/financial-review-1920.jpg" srcset="assets/img/financial-review-960.jpg 960w, assets/img/financial-review-1920.jpg 1920w" sizes="100vw" alt="A meeting reviewing financial statements and charts" loading="lazy" decoding="async">
+        </picture>
+      </div>
     <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap banner-in">
       <span class="eyebrow">Acquisition Process</span>
@@ -1175,9 +1414,34 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   </section>
 
   <div class="wrap">
-    <div class="cta-band">
-      <div><div class="cta-flag" aria-hidden="true"><i></i><i></i><i></i><i></i></div><h2>Thinking about selling your business?</h2></div>
-      <a class="btn btn-gold" href="#/contact" data-link>Start a confidential conversation</a>
+    <div class="cta-band reveal">
+      <div class="cta-copy">
+        <span class="eyebrow">Acquisition Process</span>
+        <h2>Thinking about selling your <em class="ac">business?</em></h2>
+        <a class="btn btn-white" href="#/contact" data-link>Start a confidential conversation
+          <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="cta-media">
+        <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/financial-review-960.webp 960w, assets/img/financial-review-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
+            <img src="assets/img/financial-review-960.jpg" srcset="assets/img/financial-review-960.jpg 960w, assets/img/financial-review-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="A meeting reviewing financial statements and charts" loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <div class="cta-card">
+          <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="96px">
+            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+          </picture>
+          </div>
+          <div>
+            <span class="fig tnum">3+ years</span>
+            <p>Of profitable trading history</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1186,10 +1450,11 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <div class="page" id="p-our-portfolio">
   <div class="banner">
     <div class="hero-media">
-      <video class="bgvid" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true">
-        <source src="assets/hero.mp4" type="video/mp4">
-      </video>
-    </div>
+        <picture>
+          <source type="image/webp" srcset="assets/img/partnership-960.webp 960w, assets/img/partnership-1920.webp 1920w" sizes="100vw">
+          <img src="assets/img/partnership-1920.jpg" srcset="assets/img/partnership-960.jpg 960w, assets/img/partnership-1920.jpg 1920w" sizes="100vw" alt="Two business partners reviewing figures on a tablet" loading="lazy" decoding="async">
+        </picture>
+      </div>
     <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap banner-in">
       <span class="eyebrow">Our Portfolio</span>
@@ -1251,9 +1516,34 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   </section>
 
   <div class="wrap">
-    <div class="cta-band">
-      <div><div class="cta-flag" aria-hidden="true"><i></i><i></i><i></i><i></i></div><h2>Do you have a question?</h2></div>
-      <a class="btn btn-gold" href="#/contact" data-link>Contact us</a>
+    <div class="cta-band reveal">
+      <div class="cta-copy">
+        <span class="eyebrow">Our Portfolio</span>
+        <h2>Do you have a <em class="ac">question?</em></h2>
+        <a class="btn btn-white" href="#/contact" data-link>Contact us
+          <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="cta-media">
+        <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/partnership-960.webp 960w, assets/img/partnership-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
+            <img src="assets/img/partnership-960.jpg" srcset="assets/img/partnership-960.jpg 960w, assets/img/partnership-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="Two business partners reviewing figures on a tablet" loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <div class="cta-card">
+          <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="96px">
+            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+          </picture>
+          </div>
+          <div>
+            <span class="fig tnum">R10m+</span>
+            <p>Annual turnover, typically</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1262,10 +1552,11 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <div class="page" id="p-business-owners">
   <div class="banner">
     <div class="hero-media">
-      <video class="bgvid" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true">
-        <source src="assets/hero.mp4" type="video/mp4">
-      </video>
-    </div>
+        <picture>
+          <source type="image/webp" srcset="assets/img/owner-desk-960.webp 960w, assets/img/owner-desk-1920.webp 1920w" sizes="100vw">
+          <img src="assets/img/owner-desk-1920.jpg" srcset="assets/img/owner-desk-960.jpg 960w, assets/img/owner-desk-1920.jpg 1920w" sizes="100vw" alt="A business owner working at their desk" loading="lazy" decoding="async">
+        </picture>
+      </div>
     <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap banner-in">
       <span class="eyebrow">Business Owners</span>
@@ -1330,9 +1621,34 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   </section>
 
   <div class="wrap">
-    <div class="cta-band cta-band--red">
-      <div><div class="cta-flag" aria-hidden="true"><i></i><i></i><i></i><i></i></div><h2>Start a confidential conversation</h2></div>
-      <a class="btn btn-gold" href="#/contact" data-link>Contact us</a>
+    <div class="cta-band reveal">
+      <div class="cta-copy">
+        <span class="eyebrow">Business Owners</span>
+        <h2>Start a confidential <em class="ac">conversation</em></h2>
+        <a class="btn btn-white" href="#/contact" data-link>Contact us
+          <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="cta-media">
+        <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/owner-desk-960.webp 960w, assets/img/owner-desk-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
+            <img src="assets/img/owner-desk-960.jpg" srcset="assets/img/owner-desk-960.jpg 960w, assets/img/owner-desk-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="A business owner working at their desk" loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <div class="cta-card">
+          <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="96px">
+            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+          </picture>
+          </div>
+          <div>
+            <span class="fig tnum">Majority</span>
+            <p>Control or full acquisition preferred</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1341,10 +1657,11 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <div class="page" id="p-investment-opportunities">
   <div class="banner banner--blue">
     <div class="hero-media">
-      <video class="bgvid" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true">
-        <source src="assets/hero.mp4" type="video/mp4">
-      </video>
-    </div>
+        <picture>
+          <source type="image/webp" srcset="assets/img/market-analysis-960.webp 960w, assets/img/market-analysis-1920.webp 1920w" sizes="100vw">
+          <img src="assets/img/market-analysis-1920.jpg" srcset="assets/img/market-analysis-960.jpg 960w, assets/img/market-analysis-1920.jpg 1920w" sizes="100vw" alt="Two colleagues analysing performance on a laptop" loading="lazy" decoding="async">
+        </picture>
+      </div>
     <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap banner-in">
       <span class="eyebrow">Investors</span>
@@ -1408,9 +1725,34 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   </section>
 
   <div class="wrap">
-    <div class="cta-band cta-band--blue">
-      <div><div class="cta-flag" aria-hidden="true"><i></i><i></i><i></i><i></i></div><h2>Request the investor information pack</h2></div>
-      <a class="btn btn-gold" href="#/contact" data-link>Get in touch</a>
+    <div class="cta-band reveal">
+      <div class="cta-copy">
+        <span class="eyebrow">Investors</span>
+        <h2>Request the investor information <em class="ac">pack</em></h2>
+        <a class="btn btn-white" href="#/contact" data-link>Get in touch
+          <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="cta-media">
+        <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/market-analysis-960.webp 960w, assets/img/market-analysis-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
+            <img src="assets/img/market-analysis-960.jpg" srcset="assets/img/market-analysis-960.jpg 960w, assets/img/market-analysis-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="Two colleagues analysing performance on a laptop" loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <div class="cta-card">
+          <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="96px">
+            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+          </picture>
+          </div>
+          <div>
+            <span class="fig tnum">R5m – R50m</span>
+            <p>Typical equity per transaction</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1419,10 +1761,11 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 <div class="page" id="p-contact">
   <div class="banner banner--black">
     <div class="hero-media">
-      <video class="bgvid" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true">
-        <source src="assets/hero.mp4" type="video/mp4">
-      </video>
-    </div>
+        <picture>
+          <source type="image/webp" srcset="assets/img/owner-desk-960.webp 960w, assets/img/owner-desk-1920.webp 1920w" sizes="100vw">
+          <img src="assets/img/owner-desk-1920.jpg" srcset="assets/img/owner-desk-960.jpg 960w, assets/img/owner-desk-1920.jpg 1920w" sizes="100vw" alt="A business owner working at their desk" loading="lazy" decoding="async">
+        </picture>
+      </div>
     <div class="hero-scrim" aria-hidden="true"></div>
     <div class="wrap banner-in">
       <span class="eyebrow">Contact</span>
@@ -1667,86 +2010,8 @@ if(secSel) SECTORS.concat(["Other"]).forEach(s => {
   const o = document.createElement('option'); o.textContent = s; secSel.appendChild(o);
 });
 
-/* ── hero video: same pause rule as the marquee ──────────────────────── */
+
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-/* Every hero carries background footage, so each needs its own Pause, Stop,
-   Hide control (WCAG 2.2.2). The control is built here rather than repeated
-   in markup ten times, which keeps the two from drifting apart. */
-document.querySelectorAll('.bgvid').forEach(setupBackgroundVideo);
-
-function setupBackgroundVideo(vid){
-  const hero = vid.closest('.hero, .banner');
-  if(!hero) return;
-
-  let wrap = hero.querySelector('.hero-ctl-wrap');
-  if(!wrap){
-    wrap = document.createElement('div');
-    wrap.className = 'hero-ctl-wrap';
-    hero.appendChild(wrap);
-  }
-  let vidbtn = wrap.querySelector('.video-ctl');
-  if(!vidbtn){
-    vidbtn = document.createElement('button');
-    vidbtn.type = 'button';
-    vidbtn.className = 'video-ctl';
-    vidbtn.setAttribute('aria-pressed','false');
-    vidbtn.innerHTML =
-      '<svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true" data-p><rect x="2" y="1" width="3" height="10" rx="1"/><rect x="7" y="1" width="3" height="10" rx="1"/></svg>' +
-      '<svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true" data-r hidden><path d="M3 1.6v8.8a.8.8 0 0 0 1.22.68l7-4.4a.8.8 0 0 0 0-1.36l-7-4.4A.8.8 0 0 0 3 1.6Z"/></svg>' +
-      '<span data-l>Pause background video</span>';
-    wrap.appendChild(vidbtn);
-  }
-  const vlabel = vidbtn.querySelector('[data-l]');
-  const vpause = vidbtn.querySelector('[data-p]');
-  const vplay  = vidbtn.querySelector('[data-r]');
-
-  /* `wantPaused` is the user's intent; it outranks the viewport observer.
-     pause() stays synchronous so the control always responds at once — a
-     play() promise can stay pending indefinitely when no decoder is
-     available, and awaiting it would strand the button. Catching every
-     play() is what silences the AbortError a following pause() raises. */
-  let wantPaused = false;
-
-  function paintVideoBtn(paused){
-    vidbtn.setAttribute('aria-pressed', String(paused));
-    vlabel.textContent = paused ? 'Play background video' : 'Pause background video';
-    vpause.hidden = paused;
-    vplay.hidden  = !paused;
-  }
-  function playVideo(){
-    const p = vid.play();
-    if(p && p.catch) p.catch(() => {});   /* autoplay blocked, or no decoder */
-  }
-  function pauseVideo(){ vid.pause(); }
-
-  /* never autoplay motion at someone who asked for less of it, and don't
-     spend a stranger's mobile data on a decorative 5MB loop */
-  const saveData = navigator.connection && navigator.connection.saveData;
-  if(reduceMotion.matches || saveData){
-    vid.autoplay = false;
-    vid.preload = 'none';
-    wantPaused = true;
-    pauseVideo();
-    paintVideoBtn(true);
-  }
-
-  vidbtn.addEventListener('click', () => {
-    wantPaused = !wantPaused;
-    paintVideoBtn(wantPaused);
-    if(wantPaused) pauseVideo(); else playVideo();
-  });
-
-  /* only the hero on screen decodes; hidden routes never start at all */
-  if('IntersectionObserver' in window){
-    new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if(wantPaused) return;
-        if(e.isIntersecting) playVideo(); else pauseVideo();
-      });
-    }, {threshold:.05}).observe(vid);
-  }
-}
 
 /* ── nav ─────────────────────────────────────────────────────────────── */
 const navEl  = document.getElementById('nav');
