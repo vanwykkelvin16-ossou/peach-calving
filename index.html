@@ -66,11 +66,11 @@
   --red:#E03C31;
   --red-deep:#B92B22;
 
-  /* neutrals, biased cool toward the green */
+  /* neutrals: section grounds are a true grey, not green-tinted */
   --ink:#0B1210;
   --ink-70:rgba(11,18,16,.70);
-  --ink-55:rgba(11,18,16,.56);
-  --paper:#F7F9F8;
+  --ink-55:rgba(11,18,16,.60);
+  --paper:#F3F4F6;
   --white:#fff;
   --line:rgba(11,18,16,.11);
   --line-2:rgba(11,18,16,.20);
@@ -130,8 +130,21 @@ h2 .ac{font-size:1.06em}
 .lede{font-size:clamp(1.05rem,1.35vw,1.2rem);line-height:1.55;color:var(--ink-70);max-width:60ch;text-wrap:pretty}
 /* constrain the line length without centring — copy stays flush to the
    same left edge as the hero above it */
-.measure{max-width:none}
-.measure > *{max-width:66ch}
+/* Intro prose fills the full width by flowing into two columns rather than
+   sitting in one narrow column with the right half empty. A single
+   full-bleed column would run ~130 characters a line, which is unreadable;
+   two columns land near 65. Reading order stays top-to-bottom, then across. */
+.measure{max-width:none;column-gap:var(--s-8)}
+.measure > *{max-width:none;break-inside:avoid}
+@media(min-width:981px){
+  .measure{column-count:2}
+  /* column flow supplies the rhythm; stack margins would push the first
+     paragraph of the second column out of alignment */
+  .measure.stack > * + *{margin-top:0}
+  .measure p{margin-bottom:1.15em}
+  .measure .lede{max-width:none}
+  .measure p:last-child{margin-bottom:0}
+}
 .tnum{font-variant-numeric:tabular-nums}
 
 :focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:var(--r-sm)}
@@ -301,7 +314,6 @@ h2 .ac{font-size:1.06em}
 /* ─────────────────────────── SECTIONS ─────────────────────────── */
 section{padding:var(--s-9) 0}
 .sec-paper{background:var(--paper)}
-.sec-mint{background:var(--mint)}
 .sec-dark{background:var(--green-900);color:#fff}
 .sec-dark .lede,.sec-dark p{color:rgba(255,255,255,.76)}
 .split{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-8);align-items:start}
@@ -314,6 +326,11 @@ section{padding:var(--s-9) 0}
              border-color var(--t-mid) var(--e-out)}
 .card:hover{transform:translateY(-3px);box-shadow:var(--sh-2);border-color:var(--line-2)}
 .card--lead{background:var(--mint);border-color:transparent}
+/* a card that ends in a photograph: the picture runs to the card's edges and
+   takes whatever height is left beside the column next to it */
+.cardshot{display:flex;flex-direction:column;padding-bottom:0;overflow:hidden}
+.cardshot > .shot{margin:var(--s-6) calc(-1 * var(--s-6)) 0;border-radius:0;
+  flex:1;min-height:200px}
 .card--lead h3{color:var(--green-700)}
 .sec-paper .card,.sec-mint .card{background:#fff}
 
@@ -352,10 +369,6 @@ section{padding:var(--s-9) 0}
 .aud picture img{width:100%;height:100%;object-fit:cover;
   transition:transform 700ms var(--e-out)}
 .aud:hover picture img{transform:scale(1.04)}
-/* a hairline in the routing colour keeps each card owner- or investor-facing */
-.aud::after{content:"";position:absolute;top:0;left:0;right:0;height:4px;z-index:2;
-  background:var(--green-700)}
-.aud:nth-child(2)::after{background:var(--blue-700)}
 .aud-card{padding:var(--s-6);display:flex;flex-direction:column;flex:1}
 .aud-card h3{margin-bottom:var(--s-3)}
 .aud-card p{color:var(--ink-70);font-size:.96rem}
@@ -420,10 +433,12 @@ section{padding:var(--s-9) 0}
 .center-block{max-width:70ch;margin-inline:auto;text-align:center}
 
 /* ── criteria panel: copy and a filled panel beside a tall photograph ── */
-.panelrow{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-8);align-items:start;
+.panelrow{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-8);align-items:stretch;
   margin-top:var(--s-7)}
+.panelrow > div:first-child{display:flex;flex-direction:column}
 .panel{background:var(--green-700);color:#fff;border-radius:var(--r-xl);
-  padding:var(--s-7);margin-top:var(--s-6)}
+  padding:var(--s-7);flex:1;display:flex;flex-direction:column}
+.panel .plist{margin-top:auto}
 .panel h3{color:#fff;margin-bottom:var(--s-3)}
 .panel > p{color:rgba(255,255,255,.86);margin:0 0 var(--s-6);max-width:46ch}
 .panel .btn{margin-top:var(--s-6)}
@@ -434,7 +449,8 @@ section{padding:var(--s-9) 0}
 .plist dt{font-weight:500;color:rgba(255,255,255,.86);font-size:.98rem}
 .plist dd{margin:0;font-weight:700;letter-spacing:-.02em;font-size:1.06rem;
   white-space:nowrap;color:#fff}
-.panelrow .shot{aspect-ratio:4/5;position:sticky;top:calc(var(--nav-h) + var(--s-5))}
+/* the photograph takes its height from the panel beside it */
+.panelrow .shot{aspect-ratio:auto;height:100%;min-height:520px}
 
 /* ── capability strip: icon beside the title, description under it ── */
 .strip{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-6) var(--s-5);
@@ -458,8 +474,10 @@ section{padding:var(--s-9) 0}
 .tcard p{color:var(--ink-70);font-size:.96rem;margin:0}
 
 /* ── feature: photograph beside a text column with a hairline list ── */
-.feature{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-8);align-items:center;margin-top:var(--s-8)}
-.feature .shot{aspect-ratio:4/5}
+.feature{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-8);align-items:stretch;
+  margin-top:var(--s-8)}
+/* the photograph takes its height from the text column beside it */
+.feature .shot{aspect-ratio:auto;height:100%;min-height:340px}
 .feature h3{font-size:clamp(1.7rem,2.8vw,2.35rem);letter-spacing:-.035em}
 .feature > div > p{color:var(--ink-70);margin-top:var(--s-4)}
 .frow{display:grid;grid-template-columns:44px 1fr;gap:var(--s-4);align-items:start;
@@ -648,9 +666,9 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   .grid-3,.grid-2,.crit-grid,.audience,.team,.steps,.trust{grid-template-columns:1fr}
   .strip{grid-template-columns:1fr 1fr;gap:var(--s-6) var(--s-5)}
   .feature,.panelrow{grid-template-columns:1fr;gap:var(--s-6)}
-  .panelrow .shot{position:static;aspect-ratio:16/10}
+  .panelrow .shot{position:static;aspect-ratio:16/10;height:auto;min-height:0}
   .panel{padding:var(--s-6)}
-  .feature .shot{aspect-ratio:16/10}
+  .feature .shot{aspect-ratio:16/10;height:auto;min-height:0}
   .cta-band{grid-template-columns:1fr;padding:var(--s-7) var(--s-6) var(--s-8)}
   .cta-copy{min-height:0}
   .cta-foot{margin-top:var(--s-6)}
@@ -897,9 +915,9 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
 
   <section class="sec-paper">
     <div class="wrap">
-      <div class="sec-head">
+      <div class="sec-head" style="max-width:none">
         <span class="eyebrow">Acquisition Process</span>
-        <h2 class="reveal">How we assess a <em class="ac">business</em></h2>
+        <h2 class="h2-sentence reveal" style="max-width:40ch">Every acquisition begins with understanding the opportunity and the people behind <em class="ac">it.</em></h2>
       </div>
 
       <div class="panelrow">
@@ -922,8 +940,8 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         </div>
         <div class="shot reveal rd2">
           <picture>
-            <source type="image/webp" srcset="assets/img/owner-desk-960.webp 960w, assets/img/owner-desk-1920.webp 1920w" sizes="(max-width:980px) 100vw, 50vw">
-            <img src="assets/img/owner-desk-1920.jpg" srcset="assets/img/owner-desk-960.jpg 960w, assets/img/owner-desk-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 50vw" alt="A business owner working at their desk" loading="lazy" decoding="async">
+            <source type="image/webp" srcset="assets/img/owner-lounge-960.webp 960w, assets/img/owner-lounge-1920.webp 1920w" sizes="(max-width:980px) 100vw, 50vw">
+            <img src="assets/img/owner-lounge-1920.jpg" srcset="assets/img/owner-lounge-960.jpg 960w, assets/img/owner-lounge-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 50vw" alt="A business owner working on a laptop in a lounge" loading="lazy" decoding="async">
           </picture>
         </div>
       </div>
@@ -963,7 +981,7 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         <span class="eyebrow">Contact</span>
         <h2>Do you have a <em class="ac">question?</em></h2>
         <div class="cta-foot">
-          <p>Every enquiry is treated in confidence.</p>
+          <p>Whether you're a business owner or an investor, we'd like to hear from you. Every enquiry is treated in confidence.</p>
           <a class="btn btn-white" href="#/contact" data-link>Contact us
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -972,15 +990,15 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       <div class="cta-media">
         <div class="shot">
           <picture>
-            <source type="image/webp" srcset="assets/img/partnership-960.webp 960w, assets/img/partnership-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
-            <img src="assets/img/partnership-960.jpg" srcset="assets/img/partnership-960.jpg 960w, assets/img/partnership-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="Two business partners reviewing figures on a tablet" loading="lazy" decoding="async">
+            <source type="image/webp" srcset="assets/img/colleagues-960.webp 960w, assets/img/colleagues-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
+            <img src="assets/img/colleagues-1920.jpg" srcset="assets/img/colleagues-960.jpg 960w, assets/img/colleagues-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="Three colleagues collaborating around a laptop" loading="lazy" decoding="async">
           </picture>
         </div>
         <div class="cta-card">
           <div class="shot">
           <picture>
             <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="96px">
-            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+            <img src="assets/img/team-desk-1920.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
           </picture>
           </div>
           <div>
@@ -998,8 +1016,8 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   <div class="banner">
     <div class="hero-media">
         <picture>
-          <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="100vw">
-          <img src="assets/img/team-desk-1920.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="100vw" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+          <source type="image/webp" srcset="assets/img/colleagues-960.webp 960w, assets/img/colleagues-1920.webp 1920w" sizes="100vw">
+          <img src="assets/img/colleagues-1920.jpg" srcset="assets/img/colleagues-960.jpg 960w, assets/img/colleagues-1920.jpg 1920w" sizes="100vw" alt="Three colleagues collaborating around a laptop" loading="lazy" decoding="async">
         </picture>
       </div>
     <div class="hero-scrim" aria-hidden="true"></div>
@@ -1073,7 +1091,7 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         <span class="eyebrow">Contact</span>
         <h2>Do you have a <em class="ac">question?</em></h2>
         <div class="cta-foot">
-          <p>Every enquiry is treated in confidence.</p>
+          <p>Whether you're a business owner or an investor, we'd like to hear from you. Every enquiry is treated in confidence.</p>
           <a class="btn btn-white" href="#/contact" data-link>Contact us
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -1082,15 +1100,15 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       <div class="cta-media">
         <div class="shot">
           <picture>
-            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
-            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+            <source type="image/webp" srcset="assets/img/owner-desk-960.webp 960w, assets/img/owner-desk-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
+            <img src="assets/img/owner-desk-1920.jpg" srcset="assets/img/owner-desk-960.jpg 960w, assets/img/owner-desk-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="A business owner working at their desk" loading="lazy" decoding="async">
           </picture>
         </div>
         <div class="cta-card">
           <div class="shot">
           <picture>
-            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="96px">
-            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+            <source type="image/webp" srcset="assets/img/advisory-960.webp 960w, assets/img/advisory-1920.webp 1920w" sizes="96px">
+            <img src="assets/img/advisory-1920.jpg" srcset="assets/img/advisory-960.jpg 960w, assets/img/advisory-1920.jpg 1920w" sizes="96px" alt="Two colleagues reviewing work together at a laptop" loading="lazy" decoding="async">
           </picture>
           </div>
           <div>
@@ -1167,7 +1185,7 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         <span class="eyebrow">Contact</span>
         <h2>Do you have a <em class="ac">question?</em></h2>
         <div class="cta-foot">
-          <p>Every enquiry is treated in confidence.</p>
+          <p>Whether you're a business owner or an investor, we'd like to hear from you. Every enquiry is treated in confidence.</p>
           <a class="btn btn-white" href="#/contact" data-link>Contact us
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -1176,15 +1194,15 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       <div class="cta-media">
         <div class="shot">
           <picture>
-            <source type="image/webp" srcset="assets/img/market-analysis-960.webp 960w, assets/img/market-analysis-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
-            <img src="assets/img/market-analysis-960.jpg" srcset="assets/img/market-analysis-960.jpg 960w, assets/img/market-analysis-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="Two colleagues analysing performance on a laptop" loading="lazy" decoding="async">
+            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
+            <img src="assets/img/team-desk-1920.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
           </picture>
         </div>
         <div class="cta-card">
           <div class="shot">
           <picture>
-            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="96px">
-            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+            <source type="image/webp" srcset="assets/img/owner-lounge-960.webp 960w, assets/img/owner-lounge-1920.webp 1920w" sizes="96px">
+            <img src="assets/img/owner-lounge-1920.jpg" srcset="assets/img/owner-lounge-960.jpg 960w, assets/img/owner-lounge-1920.jpg 1920w" sizes="96px" alt="A business owner working on a laptop in a lounge" loading="lazy" decoding="async">
           </picture>
           </div>
           <div>
@@ -1273,7 +1291,7 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         <span class="eyebrow">Contact</span>
         <h2>Do you have a <em class="ac">question?</em></h2>
         <div class="cta-foot">
-          <p>Every enquiry is treated in confidence.</p>
+          <p>Whether you're a business owner or an investor, we'd like to hear from you. Every enquiry is treated in confidence.</p>
           <a class="btn btn-white" href="#/contact" data-link>Contact us
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -1282,15 +1300,15 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       <div class="cta-media">
         <div class="shot">
           <picture>
-            <source type="image/webp" srcset="assets/img/financial-review-960.webp 960w, assets/img/financial-review-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
-            <img src="assets/img/financial-review-960.jpg" srcset="assets/img/financial-review-960.jpg 960w, assets/img/financial-review-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="A meeting reviewing financial statements and charts" loading="lazy" decoding="async">
+            <source type="image/webp" srcset="assets/img/partnership-960.webp 960w, assets/img/partnership-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
+            <img src="assets/img/partnership-1920.jpg" srcset="assets/img/partnership-960.jpg 960w, assets/img/partnership-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="Two business partners reviewing figures on a tablet" loading="lazy" decoding="async">
           </picture>
         </div>
         <div class="cta-card">
           <div class="shot">
           <picture>
-            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="96px">
-            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+            <source type="image/webp" srcset="assets/img/colleagues-960.webp 960w, assets/img/colleagues-1920.webp 1920w" sizes="96px">
+            <img src="assets/img/colleagues-1920.jpg" srcset="assets/img/colleagues-960.jpg 960w, assets/img/colleagues-1920.jpg 1920w" sizes="96px" alt="Three colleagues collaborating around a laptop" loading="lazy" decoding="async">
           </picture>
           </div>
           <div>
@@ -1379,7 +1397,7 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         <span class="eyebrow">Contact</span>
         <h2>Want to talk to us <em class="ac">directly?</em></h2>
         <div class="cta-foot">
-          <p>Every enquiry is treated in confidence.</p>
+          <p>Whether you're a business owner or an investor, we'd like to hear from you. Every enquiry is treated in confidence.</p>
           <a class="btn btn-white" href="#/contact" data-link>Contact us
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -1388,15 +1406,15 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       <div class="cta-media">
         <div class="shot">
           <picture>
-            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
-            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+            <source type="image/webp" srcset="assets/img/advisory-960.webp 960w, assets/img/advisory-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
+            <img src="assets/img/advisory-1920.jpg" srcset="assets/img/advisory-960.jpg 960w, assets/img/advisory-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="Two colleagues reviewing work together at a laptop" loading="lazy" decoding="async">
           </picture>
         </div>
         <div class="cta-card">
           <div class="shot">
           <picture>
-            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="96px">
-            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+            <source type="image/webp" srcset="assets/img/owner-desk-960.webp 960w, assets/img/owner-desk-1920.webp 1920w" sizes="96px">
+            <img src="assets/img/owner-desk-1920.jpg" srcset="assets/img/owner-desk-960.jpg 960w, assets/img/owner-desk-1920.jpg 1920w" sizes="96px" alt="A business owner working at their desk" loading="lazy" decoding="async">
           </picture>
           </div>
           <div>
@@ -1414,8 +1432,8 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   <div class="banner">
     <div class="hero-media">
         <picture>
-          <source type="image/webp" srcset="assets/img/financial-review-960.webp 960w, assets/img/financial-review-1920.webp 1920w" sizes="100vw">
-          <img src="assets/img/financial-review-1920.jpg" srcset="assets/img/financial-review-960.jpg 960w, assets/img/financial-review-1920.jpg 1920w" sizes="100vw" alt="A meeting reviewing financial statements and charts" loading="lazy" decoding="async">
+          <source type="image/webp" srcset="assets/img/advisory-960.webp 960w, assets/img/advisory-1920.webp 1920w" sizes="100vw">
+          <img src="assets/img/advisory-1920.jpg" srcset="assets/img/advisory-960.jpg 960w, assets/img/advisory-1920.jpg 1920w" sizes="100vw" alt="Two colleagues reviewing work together at a laptop" loading="lazy" decoding="async">
         </picture>
       </div>
     <div class="hero-scrim" aria-hidden="true"></div>
@@ -1452,7 +1470,7 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
     <div class="wrap">
       <div class="sec-head center">
         <span class="eyebrow">Acquisition Process</span>
-        <h2 class="reveal">How we assess a <em class="ac">business</em></h2>
+        <h2 class="h2-sentence reveal" style="max-width:40ch">Every acquisition begins with understanding the opportunity and the people behind <em class="ac">it.</em></h2>
       </div>
       <div class="steps">
         <div class="step reveal"><span class="step-n">Step 01</span><h3>Fair market value</h3><p>We determine fair market value using a blend of methods — EBITDA multiples, discounted cash flow and asset-based valuation. A balanced, data-driven view that reflects both current performance and future potential.</p></div>
@@ -1500,14 +1518,14 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         <div class="shot">
           <picture>
             <source type="image/webp" srcset="assets/img/financial-review-960.webp 960w, assets/img/financial-review-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
-            <img src="assets/img/financial-review-960.jpg" srcset="assets/img/financial-review-960.jpg 960w, assets/img/financial-review-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="A meeting reviewing financial statements and charts" loading="lazy" decoding="async">
+            <img src="assets/img/financial-review-1920.jpg" srcset="assets/img/financial-review-960.jpg 960w, assets/img/financial-review-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="A meeting reviewing financial statements and charts" loading="lazy" decoding="async">
           </picture>
         </div>
         <div class="cta-card">
           <div class="shot">
           <picture>
-            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="96px">
-            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+            <source type="image/webp" srcset="assets/img/owner-lounge-960.webp 960w, assets/img/owner-lounge-1920.webp 1920w" sizes="96px">
+            <img src="assets/img/owner-lounge-1920.jpg" srcset="assets/img/owner-lounge-960.jpg 960w, assets/img/owner-lounge-1920.jpg 1920w" sizes="96px" alt="A business owner working on a laptop in a lounge" loading="lazy" decoding="async">
           </picture>
           </div>
           <div>
@@ -1525,8 +1543,8 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   <div class="banner">
     <div class="hero-media">
         <picture>
-          <source type="image/webp" srcset="assets/img/partnership-960.webp 960w, assets/img/partnership-1920.webp 1920w" sizes="100vw">
-          <img src="assets/img/partnership-1920.jpg" srcset="assets/img/partnership-960.jpg 960w, assets/img/partnership-1920.jpg 1920w" sizes="100vw" alt="Two business partners reviewing figures on a tablet" loading="lazy" decoding="async">
+          <source type="image/webp" srcset="assets/img/owner-lounge-960.webp 960w, assets/img/owner-lounge-1920.webp 1920w" sizes="100vw">
+          <img src="assets/img/owner-lounge-1920.jpg" srcset="assets/img/owner-lounge-960.jpg 960w, assets/img/owner-lounge-1920.jpg 1920w" sizes="100vw" alt="A business owner working on a laptop in a lounge" loading="lazy" decoding="async">
         </picture>
       </div>
     <div class="hero-scrim" aria-hidden="true"></div>
@@ -1578,12 +1596,18 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         <p class="reveal rd1">Our approach is hands-on and specific to each business: identifying untapped potential, streamlining processes, strengthening core functions. New revenue streams, better cash flow management, modernised systems — we bring the expertise and momentum to lift performance.</p>
         <p class="reveal rd2">For owners and investors alike, that means clearer direction, stronger returns and more resilient companies built to last.</p>
       </div>
-      <div class="card stack reveal rd1">
+      <div class="card cardshot stack reveal rd1">
         <h3>South African holdings</h3>
         <p style="color:var(--ink-70)">Our first South African acquisitions are in progress. Completed transactions will be published here, with sector, transaction structure and the value created.</p>
         <p><a class="arrowlink" href="#/our-approach" data-link>Learn about our approach
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a></p>
+        <div class="shot">
+          <picture>
+            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="(max-width:980px) 100vw, 50vw">
+            <img src="assets/img/team-desk-1920.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 50vw" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+          </picture>
+        </div>
       </div>
     </div>
   </section>
@@ -1594,7 +1618,7 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         <span class="eyebrow">Our Portfolio</span>
         <h2>Do you have a <em class="ac">question?</em></h2>
         <div class="cta-foot">
-          <p>Every enquiry is treated in confidence.</p>
+          <p>Whether you're a business owner or an investor, we'd like to hear from you. Every enquiry is treated in confidence.</p>
           <a class="btn btn-white" href="#/contact" data-link>Contact us
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -1604,14 +1628,14 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         <div class="shot">
           <picture>
             <source type="image/webp" srcset="assets/img/partnership-960.webp 960w, assets/img/partnership-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
-            <img src="assets/img/partnership-960.jpg" srcset="assets/img/partnership-960.jpg 960w, assets/img/partnership-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="Two business partners reviewing figures on a tablet" loading="lazy" decoding="async">
+            <img src="assets/img/partnership-1920.jpg" srcset="assets/img/partnership-960.jpg 960w, assets/img/partnership-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="Two business partners reviewing figures on a tablet" loading="lazy" decoding="async">
           </picture>
         </div>
         <div class="cta-card">
           <div class="shot">
           <picture>
-            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="96px">
-            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+            <source type="image/webp" srcset="assets/img/colleagues-960.webp 960w, assets/img/colleagues-1920.webp 1920w" sizes="96px">
+            <img src="assets/img/colleagues-1920.jpg" srcset="assets/img/colleagues-960.jpg 960w, assets/img/colleagues-1920.jpg 1920w" sizes="96px" alt="Three colleagues collaborating around a laptop" loading="lazy" decoding="async">
           </picture>
           </div>
           <div>
@@ -1702,7 +1726,7 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         <span class="eyebrow">Business Owners</span>
         <h2>Start a confidential <em class="ac">conversation</em></h2>
         <div class="cta-foot">
-          <p>Confidentiality from the first conversation.</p>
+          <p>Confidentiality from the first conversation. A clear view of value, honestly explained, whether or not it's what you hoped to hear.</p>
           <a class="btn btn-white" href="#/contact" data-link>Contact us
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -1711,15 +1735,15 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       <div class="cta-media">
         <div class="shot">
           <picture>
-            <source type="image/webp" srcset="assets/img/owner-desk-960.webp 960w, assets/img/owner-desk-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
-            <img src="assets/img/owner-desk-960.jpg" srcset="assets/img/owner-desk-960.jpg 960w, assets/img/owner-desk-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="A business owner working at their desk" loading="lazy" decoding="async">
+            <source type="image/webp" srcset="assets/img/owner-lounge-960.webp 960w, assets/img/owner-lounge-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
+            <img src="assets/img/owner-lounge-1920.jpg" srcset="assets/img/owner-lounge-960.jpg 960w, assets/img/owner-lounge-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="A business owner working on a laptop in a lounge" loading="lazy" decoding="async">
           </picture>
         </div>
         <div class="cta-card">
           <div class="shot">
           <picture>
-            <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="96px">
-            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+            <source type="image/webp" srcset="assets/img/advisory-960.webp 960w, assets/img/advisory-1920.webp 1920w" sizes="96px">
+            <img src="assets/img/advisory-1920.jpg" srcset="assets/img/advisory-960.jpg 960w, assets/img/advisory-1920.jpg 1920w" sizes="96px" alt="Two colleagues reviewing work together at a laptop" loading="lazy" decoding="async">
           </picture>
           </div>
           <div>
@@ -1737,8 +1761,8 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   <div class="banner banner--blue">
     <div class="hero-media">
         <picture>
-          <source type="image/webp" srcset="assets/img/market-analysis-960.webp 960w, assets/img/market-analysis-1920.webp 1920w" sizes="100vw">
-          <img src="assets/img/market-analysis-1920.jpg" srcset="assets/img/market-analysis-960.jpg 960w, assets/img/market-analysis-1920.jpg 1920w" sizes="100vw" alt="Two colleagues analysing performance on a laptop" loading="lazy" decoding="async">
+          <source type="image/webp" srcset="assets/img/financial-review-960.webp 960w, assets/img/financial-review-1920.webp 1920w" sizes="100vw">
+          <img src="assets/img/financial-review-1920.jpg" srcset="assets/img/financial-review-960.jpg 960w, assets/img/financial-review-1920.jpg 1920w" sizes="100vw" alt="A meeting reviewing financial statements and charts" loading="lazy" decoding="async">
         </picture>
       </div>
     <div class="hero-scrim" aria-hidden="true"></div>
@@ -1818,14 +1842,14 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         <div class="shot">
           <picture>
             <source type="image/webp" srcset="assets/img/market-analysis-960.webp 960w, assets/img/market-analysis-1920.webp 1920w" sizes="(max-width:980px) 100vw, 46vw">
-            <img src="assets/img/market-analysis-960.jpg" srcset="assets/img/market-analysis-960.jpg 960w, assets/img/market-analysis-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="Two colleagues analysing performance on a laptop" loading="lazy" decoding="async">
+            <img src="assets/img/market-analysis-1920.jpg" srcset="assets/img/market-analysis-960.jpg 960w, assets/img/market-analysis-1920.jpg 1920w" sizes="(max-width:980px) 100vw, 46vw" alt="Two colleagues analysing performance on a laptop" loading="lazy" decoding="async">
           </picture>
         </div>
         <div class="cta-card">
           <div class="shot">
           <picture>
             <source type="image/webp" srcset="assets/img/team-desk-960.webp 960w, assets/img/team-desk-1920.webp 1920w" sizes="96px">
-            <img src="assets/img/team-desk-960.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
+            <img src="assets/img/team-desk-1920.jpg" srcset="assets/img/team-desk-960.jpg 960w, assets/img/team-desk-1920.jpg 1920w" sizes="96px" alt="A management team working together over documents and a laptop" loading="lazy" decoding="async">
           </picture>
           </div>
           <div>
@@ -1843,8 +1867,8 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   <div class="banner banner--black">
     <div class="hero-media">
         <picture>
-          <source type="image/webp" srcset="assets/img/owner-desk-960.webp 960w, assets/img/owner-desk-1920.webp 1920w" sizes="100vw">
-          <img src="assets/img/owner-desk-1920.jpg" srcset="assets/img/owner-desk-960.jpg 960w, assets/img/owner-desk-1920.jpg 1920w" sizes="100vw" alt="A business owner working at their desk" loading="lazy" decoding="async">
+          <source type="image/webp" srcset="assets/img/colleagues-960.webp 960w, assets/img/colleagues-1920.webp 1920w" sizes="100vw">
+          <img src="assets/img/colleagues-1920.jpg" srcset="assets/img/colleagues-960.jpg 960w, assets/img/colleagues-1920.jpg 1920w" sizes="100vw" alt="Three colleagues collaborating around a laptop" loading="lazy" decoding="async">
         </picture>
       </div>
     <div class="hero-scrim" aria-hidden="true"></div>
