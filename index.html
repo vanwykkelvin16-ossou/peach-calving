@@ -148,6 +148,10 @@ h2 .ac{font-size:1.06em}
 .tnum{font-variant-numeric:tabular-nums}
 
 :focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:var(--r-sm)}
+/* #main takes focus programmatically on each route change so the new page is
+   announced. It is not reachable by Tab, so it needs no focus ring — and the
+   ring's lower edge drew a gold line across the foot of every page. */
+#main:focus,#main:focus-visible{outline:none}
 .on-dark :focus-visible,.hero :focus-visible,.cta-band :focus-visible,footer :focus-visible{outline-color:var(--gold-soft)}
 
 .skip{
@@ -1029,10 +1033,10 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   </div>
 
   <section>
-    <div class="wrap measure stack">
-      <p class="reveal">Our expertise lies in the acquisition, growth and consultancy of SMEs, giving business owners access to the same level of strategic insight, capital and operational support that large corporates enjoy. We bridge the gap between ambition and execution, ensuring every business we invest in or acquire thrives under our leadership.</p>
-      <p class="reveal rd1">What sets us apart is our hands-on approach. We don't just invest; we collaborate. Our team brings sector knowledge and operating experience, guiding owners through key transitions — from scaling operations to optimising financial performance. Whether it's unlocking new revenue, refining strategy or preparing for a successful exit, we stand alongside our partners at every step.</p>
-      <p class="reveal rd2">Peach Capital South Africa is a private company incorporated in South Africa and shares its ownership with Peach Capital in the United Kingdom. That means South African businesses get a local team with local judgement, backed by a group that has already built and exited SMEs offshore.</p>
+    <div class="wrap measure stack reveal">
+      <p>Our expertise lies in the acquisition, growth and consultancy of SMEs, giving business owners access to the same level of strategic insight, capital and operational support that large corporates enjoy. We bridge the gap between ambition and execution, ensuring every business we invest in or acquire thrives under our leadership.</p>
+      <p>What sets us apart is our hands-on approach. We don't just invest; we collaborate. Our team brings sector knowledge and operating experience, guiding owners through key transitions — from scaling operations to optimising financial performance. Whether it's unlocking new revenue, refining strategy or preparing for a successful exit, we stand alongside our partners at every step.</p>
+      <p>Peach Capital South Africa is a private company incorporated in South Africa and shares its ownership with Peach Capital in the United Kingdom. That means South African businesses get a local team with local judgement, backed by a group that has already built and exited SMEs offshore.</p>
     </div>
   </section>
 
@@ -1139,9 +1143,9 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   </div>
 
   <section>
-    <div class="wrap measure stack">
-      <p class="reveal">Whether we're making an investment, acquiring a business or stepping into a consultancy role, we immerse ourselves in the business and tailor our solutions to what that company actually needs. This ensures we don't just offer capital, but real strategic value.</p>
-      <p class="reveal rd1">Above all, we prioritise transparency and clear communication at every stage. Optimising processes, navigating an acquisition, preparing for an exit — we are there throughout, making sure owners are equipped to make informed decisions.</p>
+    <div class="wrap measure stack reveal">
+      <p>Whether we're making an investment, acquiring a business or stepping into a consultancy role, we immerse ourselves in the business and tailor our solutions to what that company actually needs. This ensures we don't just offer capital, but real strategic value.</p>
+      <p>Above all, we prioritise transparency and clear communication at every stage. Optimising processes, navigating an acquisition, preparing for an exit — we are there throughout, making sure owners are equipped to make informed decisions.</p>
     </div>
   </section>
 
@@ -1233,9 +1237,9 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   </div>
 
   <section>
-    <div class="wrap measure stack">
-      <p class="reveal">With a bespoke approach to investment and consultancy, we provide strategies that help businesses optimise operations, scale efficiently and improve profitability. Our industry connections and market knowledge give owners the edge to stay ahead and act on opportunity.</p>
-      <p class="reveal rd1">Our people are the asset — expertise across business development, operational efficiency and financial strategy. We don't just advise; we take part in implementation. That hands-on involvement is how businesses build foundations that hold.</p>
+    <div class="wrap measure stack reveal">
+      <p>With a bespoke approach to investment and consultancy, we provide strategies that help businesses optimise operations, scale efficiently and improve profitability. Our industry connections and market knowledge give owners the edge to stay ahead and act on opportunity.</p>
+      <p>Our people are the asset — expertise across business development, operational efficiency and financial strategy. We don't just advise; we take part in implementation. That hands-on involvement is how businesses build foundations that hold.</p>
     </div>
   </section>
 
@@ -1445,10 +1449,10 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   </div>
 
   <section>
-    <div class="wrap measure stack">
-      <p class="reveal">We take a collaborative, respectful approach from day one, so owners feel informed and supported throughout. We align early on goals, timelines and expectations, and keep communication clear.</p>
-      <p class="reveal rd1">We handle each stage with precision — sourcing and evaluation through to negotiation and transition. Our team covers financial analysis, legal structuring and operational planning so each deal is sound, scalable and built to last. For owners that means less stress, a smoother handover and greater clarity.</p>
-      <p class="reveal rd2">Because we stay involved after the transaction, the value we commit to during the deal keeps growing afterwards. Whether you're stepping back entirely or staying on, we build a path that works for you.</p>
+    <div class="wrap measure stack reveal">
+      <p>We take a collaborative, respectful approach from day one, so owners feel informed and supported throughout. We align early on goals, timelines and expectations, and keep communication clear.</p>
+      <p>We handle each stage with precision — sourcing and evaluation through to negotiation and transition. Our team covers financial analysis, legal structuring and operational planning so each deal is sound, scalable and built to last. For owners that means less stress, a smoother handover and greater clarity.</p>
+      <p>Because we stay involved after the transaction, the value we commit to during the deal keeps growing afterwards. Whether you're stepping back entirely or staying on, we build a path that works for you.</p>
     </div>
 
     <div class="wrap">
@@ -1556,10 +1560,10 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   </div>
 
   <section>
-    <div class="wrap measure stack">
-      <p class="reveal">We invest in both traditional industries and emerging technologies, with holdings in property development, modular manufacturing, engineering and construction — sectors where operational expertise and a capital injection drive immediate impact and long-term returns.</p>
-      <p class="reveal rd1">We also back businesses at the edge of the digital economy: fintech, tokenisation, software development and digital agencies, where we can unlock scalability, improve platforms and accelerate reach. We work closely with founders to refine business models, streamline operations and build infrastructure that scales.</p>
-      <p class="reveal rd2">Alongside that, we hold interests in lifestyle and health sectors — pharmaceuticals, health tech, leisure and resort operations, and drive-thru food and beverage — where structure, branding and customer experience are where the value is made.</p>
+    <div class="wrap measure stack reveal">
+      <p>We invest in both traditional industries and emerging technologies, with holdings in property development, modular manufacturing, engineering and construction — sectors where operational expertise and a capital injection drive immediate impact and long-term returns.</p>
+      <p>We also back businesses at the edge of the digital economy: fintech, tokenisation, software development and digital agencies, where we can unlock scalability, improve platforms and accelerate reach. We work closely with founders to refine business models, streamline operations and build infrastructure that scales.</p>
+      <p>Alongside that, we hold interests in lifestyle and health sectors — pharmaceuticals, health tech, leisure and resort operations, and drive-thru food and beverage — where structure, branding and customer experience are where the value is made.</p>
     </div>
   </section>
 
@@ -1666,9 +1670,9 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   </div>
 
   <section>
-    <div class="wrap measure stack">
-      <p class="reveal">If you're looking to grow, streamline or prepare your company for a future sale, Peach Capital is here to support that journey. We understand the pressure of running an owner-managed business in South Africa, and we provide the capital, expertise and hands-on support to unlock growth and increase value.</p>
-      <p class="reveal rd1">From scaling operations to succession planning, we work closely with you to build a clear, actionable strategy. You gain more than a financial partner — you gain a team committed to helping the business succeed at every stage.</p>
+    <div class="wrap measure stack reveal">
+      <p>If you're looking to grow, streamline or prepare your company for a future sale, Peach Capital is here to support that journey. We understand the pressure of running an owner-managed business in South Africa, and we provide the capital, expertise and hands-on support to unlock growth and increase value.</p>
+      <p>From scaling operations to succession planning, we work closely with you to build a clear, actionable strategy. You gain more than a financial partner — you gain a team committed to helping the business succeed at every stage.</p>
     </div>
   </section>
 
@@ -1774,10 +1778,10 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   </div>
 
   <section>
-    <div class="wrap measure stack">
-      <p class="reveal">These companies sit beneath the radar of traditional private equity but offer significant upside when paired with strategic guidance and operational expertise. Our sweet spot is established firms with strong fundamentals that benefit from better structure, funding and focus.</p>
-      <p class="reveal rd1">Deal flow is sourced through trusted networks, direct outreach and referrals, giving us access to opportunities that are frequently off-market. We take a disciplined, data-led approach to selection — assessing not just financials, but the people, the potential and the positioning of each business.</p>
-      <p class="reveal rd2">For investors, that means a curated set of businesses across sectors, each with a tailored growth plan and a defined exit path, actively managed rather than left to run.</p>
+    <div class="wrap measure stack reveal">
+      <p>These companies sit beneath the radar of traditional private equity but offer significant upside when paired with strategic guidance and operational expertise. Our sweet spot is established firms with strong fundamentals that benefit from better structure, funding and focus.</p>
+      <p>Deal flow is sourced through trusted networks, direct outreach and referrals, giving us access to opportunities that are frequently off-market. We take a disciplined, data-led approach to selection — assessing not just financials, but the people, the potential and the positioning of each business.</p>
+      <p>For investors, that means a curated set of businesses across sectors, each with a tailored growth plan and a defined exit path, actively managed rather than left to run.</p>
     </div>
   </section>
 
