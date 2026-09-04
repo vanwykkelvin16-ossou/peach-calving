@@ -6,7 +6,6 @@
 <title>Peach Capital South Africa — Purpose-Driven Private Equity</title>
 <meta name="description" content="Peach Capital South Africa invests in and acquires South African SMEs, providing capital, operational expertise and succession solutions. Deals from R5m to R50m, nationally.">
 <meta name="theme-color" content="#0E2A1E">
-<link rel="canonical" href="https://peachcapital.co.za/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Ccircle cx='17' cy='18' r='15' fill='%232E7D5B'/%3E%3Cpath d='M9 9c3-3 7-4 10-3' stroke='%23fff' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 
 <meta property="og:type" content="website">
@@ -14,13 +13,12 @@
 <meta property="og:title" content="Peach Capital South Africa — Purpose-Driven Private Equity">
 <meta property="og:description" content="We invest in and acquire South African SMEs, providing capital, operational expertise and succession solutions. R5m – R50m per transaction, nationally.">
 <meta property="og:locale" content="en_ZA">
-<meta property="og:url" content="https://peachcapital.co.za/">
-<meta property="og:image" content="https://peachcapital.co.za/assets/img/og-card.jpg">
+<meta property="og:image" content="/assets/img/og-card.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Two business partners reviewing figures on a tablet">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://peachcapital.co.za/assets/img/og-card.jpg">
+<meta name="twitter:image" content="/assets/img/og-card.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -598,8 +596,10 @@ form{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-
   margin:var(--s-5) 0 0}
 .consent input{margin-top:3px;width:20px;height:20px;flex:none;accent-color:var(--green-700)}
 .formnote{font-size:.84rem;color:var(--ink-55);margin-top:var(--s-4)}
-.sent{background:var(--green-700);color:#fff;border-radius:var(--r-md);padding:16px 18px;
-  font-weight:600;margin-bottom:var(--s-4);display:none}
+.formnote a{color:var(--green-700);font-weight:600}
+.sent{background:#FFF6E0;border:1px solid var(--gold-deep);border-left-width:4px;color:var(--ink);
+  border-radius:var(--r-md);padding:16px 18px;font-weight:600;margin-bottom:var(--s-4);display:none}
+.sent a{color:var(--green-800)}
 .sent.show{display:block}
 .errsum{display:none;background:#FDF2F1;border:1px solid var(--red-deep);border-left-width:4px;
   border-radius:var(--r-md);padding:18px 20px;margin-bottom:var(--s-5)}
@@ -1969,7 +1969,7 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
       </div>
 
       <form id="enquiry" novalidate>
-        <div class="sent" id="sent" role="status">Thanks — your enquiry has been recorded. We'll respond within one business day.</div>
+        <div class="sent" id="sent" role="status">This form is not yet connected. Please email your enquiry to <a href="mailto:hello@peachcapital.co.za">hello@peachcapital.co.za</a> and we'll respond within one business day.</div>
 
         <div class="errsum" id="errsum" role="alert" tabindex="-1" aria-labelledby="errsum-title">
           <h4 id="errsum-title">There is a problem</h4>
@@ -2053,7 +2053,7 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         <p class="err" id="popia-err" style="margin:var(--s-3) 0 0">You need to give consent before we can respond to your enquiry</p>
 
         <button class="btn btn-green" type="submit" style="margin-top:var(--s-5)">Send enquiry</button>
-        <p class="formnote">This is a demonstration build — the form does not yet submit anywhere. Connect it to your CRM or mail handler before launch.</p>
+        <p class="formnote">This form is not yet connected to our systems. To reach us now, email <a href="mailto:hello@peachcapital.co.za">hello@peachcapital.co.za</a> or call the number above.</p>
       </form>
     </div>
   </section>
