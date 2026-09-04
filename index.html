@@ -480,7 +480,7 @@ section{padding:var(--s-9) 0}
 /* ── film band: the clip runs at its own 2.75:1 frame so nothing is cropped.
       The brand gradient sits behind it, so the band still reads if the file
       is slow, blocked, or the codec is unavailable. ── */
-.filmband{position:relative;margin-top:var(--s-9);border-radius:var(--r-xl);overflow:hidden;
+.filmband{position:relative;margin-top:var(--s-7);border-radius:var(--r-xl);overflow:hidden;
   background:linear-gradient(112deg,var(--green-950),var(--green-700));box-shadow:var(--sh-2)}
 .filmband video{display:block;width:100%;height:auto;aspect-ratio:1918/698;object-fit:cover}
 .video-ctl{position:absolute;left:var(--s-5);bottom:var(--s-5);z-index:2;
@@ -833,6 +833,13 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         </div>
       </div>
 
+      <div class="filmband reveal">
+        <video id="showreel" autoplay muted loop playsinline preload="metadata"
+               tabindex="-1" aria-hidden="true">
+          <source src="assets/showreel.mp4" type="video/mp4">
+        </video>
+      </div>
+
       <div class="sec-head center" style="margin-top:var(--s-8)">
         <span class="eyebrow">Our Approach</span>
         <h2 class="reveal">Backing the businesses that hold South Africa <em class="ac">together</em></h2>
@@ -868,13 +875,6 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         <p class="reveal"><a class="arrowlink" href="#/our-approach" data-link>Learn about our approach
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a></p>
-      </div>
-
-      <div class="filmband reveal">
-        <video id="showreel" autoplay muted loop playsinline preload="metadata"
-               tabindex="-1" aria-hidden="true">
-          <source src="assets/showreel.mp4" type="video/mp4">
-        </video>
       </div>
 
       <div class="feature">
