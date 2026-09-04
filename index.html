@@ -477,6 +477,21 @@ section{padding:var(--s-9) 0}
 .tcard h3{font-size:1.12rem;letter-spacing:-.02em;margin:0}
 .tcard p{color:var(--ink-70);font-size:.96rem;margin:0}
 
+/* ── film band: the clip runs at its own 2.75:1 frame so nothing is cropped.
+      The brand gradient sits behind it, so the band still reads if the file
+      is slow, blocked, or the codec is unavailable. ── */
+.filmband{position:relative;margin-top:var(--s-9);border-radius:var(--r-xl);overflow:hidden;
+  background:linear-gradient(112deg,var(--green-950),var(--green-700));box-shadow:var(--sh-2)}
+.filmband video{display:block;width:100%;height:auto;aspect-ratio:1918/698;object-fit:cover}
+.video-ctl{position:absolute;left:var(--s-5);bottom:var(--s-5);z-index:2;
+  display:inline-flex;align-items:center;gap:9px;background:rgba(10,33,23,.42);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.34);border-radius:var(--r-pill);color:#fff;
+  padding:9px 17px;font:inherit;font-size:.82rem;font-weight:600;cursor:pointer;min-height:42px;
+  transition:background var(--t-fast) var(--e-out)}
+.video-ctl:hover{background:rgba(10,33,23,.62)}
+.video-ctl svg{width:12px;height:12px;flex:none}
+
 /* ── feature: photograph beside a text column with a hairline list ── */
 .feature{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-8);align-items:stretch;
   margin-top:var(--s-8)}
@@ -669,6 +684,8 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
   .split,.split-wide,.contact-grid{grid-template-columns:1fr;gap:var(--s-7)}
   .grid-3,.grid-2,.crit-grid,.audience,.team,.steps,.trust{grid-template-columns:1fr}
   .strip{grid-template-columns:1fr 1fr;gap:var(--s-6) var(--s-5)}
+  .filmband{margin-top:var(--s-8)}
+  .filmband video{aspect-ratio:16/9}
   .feature,.panelrow{grid-template-columns:1fr;gap:var(--s-6)}
   .panelrow .shot{position:static;aspect-ratio:16/10;height:auto;min-height:0}
   .panel{padding:var(--s-6)}
@@ -851,6 +868,13 @@ footer h4{color:#fff;margin-bottom:var(--s-4);font-size:.96rem}
         <p class="reveal"><a class="arrowlink" href="#/our-approach" data-link>Learn about our approach
           <svg class="ico" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a></p>
+      </div>
+
+      <div class="filmband reveal">
+        <video id="showreel" autoplay muted loop playsinline preload="metadata"
+               tabindex="-1" aria-hidden="true">
+          <source src="assets/showreel.mp4" type="video/mp4">
+        </video>
       </div>
 
       <div class="feature">
@@ -2121,6 +2145,69 @@ if(secSel) SECTORS.concat(["Other"]).forEach(s => {
 
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+/* ── film band ────────────────────────────────────────────────────────
+   The clip runs 10s, past the 5s threshold in WCAG 2.2.2, so it needs a
+   Pause, Stop, Hide control. pause() stays synchronous: a play() promise
+   can stay pending when no decoder is available, and awaiting it would
+   strand the button. Catching every play() is what silences the
+   AbortError a following pause() raises.                              */
+(function(){
+  const vid = document.getElementById('showreel');
+  if(!vid) return;
+  const band = vid.closest('.filmband');
+
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'video-ctl';
+  btn.setAttribute('aria-pressed','false');
+  btn.innerHTML =
+    '<svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true" data-p><rect x="2" y="1" width="3" height="10" rx="1"/><rect x="7" y="1" width="3" height="10" rx="1"/></svg>' +
+    '<svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true" data-r hidden><path d="M3 1.6v8.8a.8.8 0 0 0 1.22.68l7-4.4a.8.8 0 0 0 0-1.36l-7-4.4A.8.8 0 0 0 3 1.6Z"/></svg>' +
+    '<span data-l>Pause video</span>';
+  band.appendChild(btn);
+
+  const label = btn.querySelector('[data-l]');
+  const icoPause = btn.querySelector('[data-p]');
+  const icoPlay  = btn.querySelector('[data-r]');
+  let wantPaused = false;
+
+  function paint(paused){
+    btn.setAttribute('aria-pressed', String(paused));
+    label.textContent = paused ? 'Play video' : 'Pause video';
+    icoPause.hidden = paused;
+    icoPlay.hidden  = !paused;
+  }
+  function play(){ const p = vid.play(); if(p && p.catch) p.catch(() => {}); }
+  function pause(){ vid.pause(); }
+
+  /* never autoplay motion at someone who asked for less of it, and don't
+     spend a stranger's mobile data on a decorative loop */
+  const saveData = navigator.connection && navigator.connection.saveData;
+  if(reduceMotion.matches || saveData){
+    vid.autoplay = false;
+    vid.preload = 'none';
+    wantPaused = true;
+    pause();
+    paint(true);
+  }
+
+  btn.addEventListener('click', () => {
+    wantPaused = !wantPaused;
+    paint(wantPaused);
+    if(wantPaused) pause(); else play();
+  });
+
+  /* only decode while the band is actually on screen */
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if(wantPaused) return;
+        if(e.isIntersecting) play(); else pause();
+      });
+    }, {threshold:.15}).observe(vid);
+  }
+})();
 
 /* ── nav ─────────────────────────────────────────────────────────────── */
 const navEl  = document.getElementById('nav');
